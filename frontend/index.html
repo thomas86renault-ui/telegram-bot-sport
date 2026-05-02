@@ -922,9 +922,31 @@ function openPayment(type) {
   document.getElementById('modal-sub').textContent = info.sub;
 
   const links = PAYMENT_LINKS[type];
-  document.getElementById('pay-stripe').href = links.stripe === '#' ? 'javascript:void(0)' : links.stripe;
-  document.getElementById('pay-paypal').href = links.paypal;
-  document.getElementById('pay-crypto').href = links.crypto;
+
+  ['pay-stripe', 'pay-paypal', 'pay-crypto'].forEach(id => {
+    const el = document.getElementById(id);
+    const linkMap = { 'pay-stripe': links.stripe, 'pay-paypal': links.paypal, 'pay-crypto': links.crypto };
+    const url = linkMap[id];
+    
+    el.replaceWith(el.cloneNode(true)); // Supprime les anciens listeners
+    const fresh = document.getElementById(id);
+    
+    fresh.addEventListener('click', () => {
+      if (url === '#') {
+        tg.showAlert('Bientôt disponible');
+        return;
+      }
+      try {
+        tg.openLink(url);
+      } catch(e) {
+        try {
+          tg.openTelegramLink(url);
+        } catch(e2) {
+          window.location.href = url;
+        }
+      }
+    });
+  });
 
   document.getElementById('payment-modal').classList.remove('hidden');
 }
