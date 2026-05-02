@@ -573,7 +573,7 @@
     <div class="modal-title" id="modal-title">Choisir le paiement</div>
     <div class="modal-sub" id="modal-sub">Sélectionne ton mode de paiement</div>
     <div class="payment-options">
-      <div class="payment-btn" id="pay-stripe">
+      <a class="payment-btn" id="pay-stripe">
         <div class="payment-icon">💳</div>
         <div class="payment-info">
           <div class="payment-name">Carte bancaire</div>
@@ -581,7 +581,7 @@
         </div>
         <div class="payment-arrow">›</div>
       </a>
-      <div class="payment-btn" id="pay-paypal">
+      <a class="payment-btn" id="pay-paypal">
         <div class="payment-icon">🅿️</div>
         <div class="payment-info">
           <div class="payment-name">PayPal</div>
@@ -589,7 +589,7 @@
         </div>
         <div class="payment-arrow">›</div>
       </a>
-      <div class="payment-btn" id="pay-crypto">
+      <a class="payment-btn" id="pay-crypto">
         <div class="payment-icon">₿</div>
         <div class="payment-info">
           <div class="payment-name">Crypto</div>
@@ -922,25 +922,9 @@ function openPayment(type) {
   document.getElementById('modal-sub').textContent = info.sub;
 
   const links = PAYMENT_LINKS[type];
-  
-// Stripe
-document.getElementById('pay-stripe').onclick = (e) => {
-  e.preventDefault();
-  if (links.stripe !== '#') window.open(links.stripe, '_blank');
-  else tg.showAlert('Paiement carte bientôt disponible');
-};
-
-// PayPal
-document.getElementById('pay-paypal').onclick = (e) => {
-  e.preventDefault();
-  window.open(links.paypal, '_blank');
-};
-
-// Crypto
-document.getElementById('pay-crypto').onclick = (e) => {
-  e.preventDefault();
-  window.open(links.crypto, '_blank');
-};
+  document.getElementById('pay-stripe').href = links.stripe === '#' ? 'javascript:void(0)' : links.stripe;
+  document.getElementById('pay-paypal').href = links.paypal;
+  document.getElementById('pay-crypto').href = links.crypto;
 
   document.getElementById('payment-modal').classList.remove('hidden');
 }
