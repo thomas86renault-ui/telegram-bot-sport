@@ -922,17 +922,28 @@ function openPayment(type) {
   document.getElementById('modal-sub').textContent = info.sub;
 
   const links = PAYMENT_LINKS[type];
-  document.getElementById('pay-stripe').href = links.stripe;
-  document.getElementById('pay-paypal').href = links.paypal;
-  document.getElementById('pay-crypto').href = links.crypto;
+  
+  // Stripe
+  document.getElementById('pay-stripe').onclick = (e) => {
+    e.preventDefault();
+    if (links.stripe !== '#') tg.openLink(links.stripe);
+    else tg.showAlert('Paiement carte bientôt disponible');
+  };
+  
+  // PayPal
+  document.getElementById('pay-paypal').onclick = (e) => {
+    e.preventDefault();
+    tg.openLink(links.paypal);
+  };
+  
+  // Crypto
+  document.getElementById('pay-crypto').onclick = (e) => {
+    e.preventDefault();
+    tg.openLink(links.crypto);
+  };
 
   document.getElementById('payment-modal').classList.remove('hidden');
 }
-
-function closeModal() {
-  document.getElementById('payment-modal').classList.add('hidden');
-}
-
 // ── START ─────────────────────────────────────────────────────
 init();
 </script>
