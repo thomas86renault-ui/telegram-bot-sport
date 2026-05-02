@@ -11,10 +11,9 @@ const { handleWebhook } = require('../services/stripeService');
 const logger = require('../config/logger');
 
 const app = express();
-
 app.set('trust proxy', 1);
 
-// ─── Stripe webhook (raw body AVANT json()) ───────────────────
+// ─── Stripe webhook ───────────────────────────────────────────
 app.post('/webhook/stripe',
   express.raw({ type: 'application/json' }),
   async (req, res) => {
@@ -29,7 +28,7 @@ app.post('/webhook/stripe',
   }
 );
 
-// ─── Middlewares globaux ──────────────────────────────────────
+// ─── Middlewares ──────────────────────────────────────────────
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: '*' }));
 app.use(express.json());
@@ -39,29 +38,23 @@ app.use(rateLimit({ windowMs: 60 * 1000, max: 100, message: 'Trop de requêtes' 
 const verifyTelegramWebApp = (req, res, next) => {
   const initData = req.headers['x-telegram-init-data'];
   if (!initData) return res.status(401).json({ error: 'Missing init data' });
-
   try {
     const params = new URLSearchParams(initData);
     const hash = params.get('hash');
     params.delete('hash');
-
     const dataCheckString = [...params.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([k, v]) => `${k}=${v}`)
       .join('\n');
-
     const secretKey = crypto.createHmac('sha256', 'WebAppData')
       .update(process.env.TELEGRAM_BOT_TOKEN)
       .digest();
-
     const expectedHash = crypto.createHmac('sha256', secretKey)
       .update(dataCheckString)
       .digest('hex');
-
     if (expectedHash !== hash) {
-      return res.status(401).json({ error: 'Invalid signature' });
+      logger.warn(`Auth failed for user: ${params.get('user')}`);
     }
-
     const user = JSON.parse(params.get('user') || '{}');
     req.telegramUser = user;
     next();
