@@ -21,10 +21,11 @@
     .header { position: sticky; top: 0; z-index: 100; background: rgba(8,8,16,.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
     .header-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; background: linear-gradient(135deg, #6c63ff, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .credits-pill { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--gold); }
-    .nav { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
-    .nav-tab { flex: 1; padding: 11px 8px; text-align: center; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
+    .nav { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav-tab { flex: 1; min-width: 60px; padding: 10px 6px; text-align: center; font-size: 10px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; white-space: nowrap; }
     .nav-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
-    .nav-tab .tab-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+    .nav-tab .tab-icon { font-size: 15px; display: block; margin-bottom: 2px; }
     .page { display: none; padding: 16px; }
     .page.active { display: block; }
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
@@ -38,15 +39,18 @@
     .analyse-launch { background: linear-gradient(135deg, #1a1535, #0f1628); border: 1px solid rgba(108,99,255,.3); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
     .analyse-launch h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
     .analyse-launch p { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    .info-banner { background: rgba(108,99,255,.08); border: 1px solid rgba(108,99,255,.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 12px; color: var(--accent2); line-height: 1.5; }
     .free-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,214,143,.1); border: 1px solid rgba(0,214,143,.2); border-radius: 20px; padding: 3px 10px; font-size: 11px; color: var(--green); margin-bottom: 12px; }
     .input-group { margin-bottom: 12px; }
     .input-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; }
     .input-field { width: 100%; padding: 11px 14px; background: var(--surface3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif; }
     .input-field:focus { outline: none; border-color: var(--accent); }
+    textarea.input-field { resize: vertical; min-height: 120px; line-height: 1.6; }
     .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-family: 'Syne', sans-serif; font-weight: 700; cursor: pointer; transition: all .2s; }
     .btn-primary { background: linear-gradient(135deg, var(--accent), #9d50ff); color: #fff; }
     .btn-secondary { background: var(--surface3); color: var(--text); border: 1px solid var(--border2); }
+    .btn-gold { background: linear-gradient(135deg, #ffb020, #ff8c00); color: #000; }
     .bet-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
     .bet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
     .bet-match { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; }
@@ -66,6 +70,15 @@
     .toggle-track.on { background: var(--accent); }
     .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: #fff; border-radius: 50%; transition: transform .2s; }
     .toggle-track.on .toggle-thumb { transform: translateX(12px); }
+    /* Combiné */
+    .combo-match-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+    .combo-match-row .input-field { flex: 1; }
+    .btn-remove { background: rgba(255,79,106,.1); color: var(--red); border: 1px solid rgba(255,79,106,.2); border-radius: 8px; padding: 8px 10px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+    .btn-add-match { background: var(--surface3); color: var(--accent2); border: 1px solid rgba(108,99,255,.3); border-radius: 10px; padding: 10px; font-size: 13px; cursor: pointer; width: 100%; margin-bottom: 12px; text-align: center; }
+    .combo-result { background: var(--surface2); border: 1px solid rgba(255,176,32,.2); border-radius: 14px; padding: 16px; margin-top: 14px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
+    .combo-odds-row { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+    .combo-odds-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    /* Plans */
     .plan-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 12px; cursor: pointer; transition: all .2s; position: relative; }
     .plan-card:active { transform: scale(.98); }
     .plan-card.featured { border-color: rgba(108,99,255,.4); background: linear-gradient(135deg, #13112a, #0f0f1a); }
@@ -77,6 +90,7 @@
     .plan-features { font-size: 12px; color: var(--muted); line-height: 1.8; }
     .plan-features li { list-style: none; }
     .plan-features li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+    /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: flex-end; }
     .modal-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 24px 20px 32px; width: 100%; border-top: 1px solid var(--border2); }
     .modal-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
@@ -96,6 +110,8 @@
     .hidden { display: none !important; }
     .mt-10 { margin-top: 10px; }
     .mb-14 { margin-bottom: 14px; }
+    .spinner-inline { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -108,10 +124,12 @@
 <div class="nav">
   <div class="nav-tab active" onclick="goTo('dashboard')"><span class="tab-icon">📊</span>Dashboard</div>
   <div class="nav-tab" onclick="goTo('analyse')"><span class="tab-icon">🤖</span>Analyser</div>
-  <div class="nav-tab" onclick="goTo('paris')"><span class="tab-icon">🎯</span>Paris</div>
+  <div class="nav-tab" onclick="goTo('combine')"><span class="tab-icon">🎯</span>Combiné</div>
+  <div class="nav-tab" onclick="goTo('paris')"><span class="tab-icon">📋</span>Paris</div>
   <div class="nav-tab" onclick="goTo('boutique')"><span class="tab-icon">💳</span>Boutique</div>
 </div>
 
+<!-- ══ DASHBOARD ══ -->
 <div id="page-dashboard" class="page active">
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-label">Bankroll</div><div class="stat-value c-gold" id="s-bankroll">—</div><div class="stat-sub" id="s-initial">Dépôt —</div></div>
@@ -133,14 +151,27 @@
   </div>
 </div>
 
+<!-- ══ ANALYSER ══ -->
 <div id="page-analyse" class="page">
+  <div class="info-banner">💡 Toutes tes analyses sont sauvegardées ici automatiquement. Tu peux aussi lancer une analyse via <b>/analyse</b> sur Telegram.</div>
   <div class="analyse-launch">
     <div id="free-badge-container"></div>
     <h3>Analyse IA d'un match</h3>
     <p>Entre le nom du match, l'IA consulte les stats et les cotes en temps réel pour te donner un pronostic argumenté.</p>
   </div>
   <div class="input-group"><label class="input-label">Match *</label><input class="input-field" id="a-match" placeholder="PSG vs Real Madrid"></div>
-  <div class="input-group"><label class="input-label">Sport</label><select class="input-field" id="a-sport"><option value="football">⚽ Football</option><option value="tennis">🎾 Tennis</option><option value="basketball">🏀 Basketball</option><option value="rugby">🏉 Rugby</option></select></div>
+  <div class="input-group">
+    <label class="input-label">Sport</label>
+    <select class="input-field" id="a-sport">
+      <option value="football">⚽ Football</option>
+      <option value="tennis">🎾 Tennis</option>
+      <option value="basketball">🏀 Basketball / NBA</option>
+      <option value="rugby">🏉 Rugby</option>
+      <option value="american_football">🏈 NFL / Football américain</option>
+      <option value="baseball">⚾ Baseball / MLB</option>
+      <option value="hockey">🏒 Hockey / NHL</option>
+    </select>
+  </div>
   <div class="input-group"><label class="input-label">Contexte (optionnel)</label><input class="input-field" id="a-context" placeholder="Blessés, météo, enjeu..."></div>
   <button class="btn btn-primary" id="btn-analyse" onclick="launchAnalysis()">⚡ Lancer l'analyse</button>
   <div id="analysis-result-container"></div>
@@ -148,11 +179,37 @@
   <div id="analyses-history"></div>
 </div>
 
+<!-- ══ COMBINÉ ══ -->
+<div id="page-combine" class="page">
+  <div class="info-banner">💡 Analyse un combiné de plusieurs matchs en une fois. Tu peux aussi utiliser <b>/combine</b> sur Telegram.</div>
+  <div class="analyse-launch">
+    <h3>🎯 Analyse de combiné</h3>
+    <p>Ajoute tes matchs un par un. L'IA analysera chaque match et te donnera un verdict global sur ton combiné.</p>
+  </div>
+
+  <div id="combo-matches-list"></div>
+  <button class="btn-add-match" onclick="addComboMatch()">+ Ajouter un match</button>
+
+  <div class="input-group">
+    <label class="input-label">Mise totale envisagée (€)</label>
+    <input class="input-field" id="c-stake" type="number" step="0.01" placeholder="10">
+  </div>
+
+  <button class="btn btn-gold" id="btn-combo" onclick="launchCombo()">🎯 Analyser le combiné</button>
+  <div id="combo-result-container"></div>
+
+  <div class="section-title">Derniers combinés</div>
+  <div id="combo-history"></div>
+</div>
+
+<!-- ══ PARIS ══ -->
 <div id="page-paris" class="page">
+  <div class="info-banner">💡 Saisis tes paris ici pour suivre ta bankroll. Les résultats peuvent être mis à jour manuellement ou automatiquement via les notifications.</div>
   <button class="btn btn-primary mb-14" onclick="openAddBet()">+ Saisir un pari</button>
   <div id="bets-list"></div>
 </div>
 
+<!-- ══ BOUTIQUE ══ -->
 <div id="page-boutique" class="page">
   <div class="section-title" style="margin-top:0">Crédits à la carte</div>
   <div class="plan-card" onclick="openPayment('credits')">
@@ -203,7 +260,18 @@
     <div class="modal-title">Nouveau pari</div>
     <div class="input-group"><label class="input-label">Match *</label><input class="input-field" id="b-match" placeholder="PSG vs Real Madrid"></div>
     <div class="input-row">
-      <div class="input-group"><label class="input-label">Sport</label><select class="input-field" id="b-sport"><option value="football">⚽ Football</option><option value="tennis">🎾 Tennis</option><option value="basketball">🏀 Basketball</option><option value="rugby">🏉 Rugby</option></select></div>
+      <div class="input-group">
+        <label class="input-label">Sport</label>
+        <select class="input-field" id="b-sport">
+          <option value="football">⚽ Football</option>
+          <option value="tennis">🎾 Tennis</option>
+          <option value="basketball">🏀 Basketball</option>
+          <option value="rugby">🏉 Rugby</option>
+          <option value="american_football">🏈 NFL</option>
+          <option value="baseball">⚾ Baseball</option>
+          <option value="hockey">🏒 Hockey</option>
+        </select>
+      </div>
       <div class="input-group"><label class="input-label">Type de pari</label><input class="input-field" id="b-type" placeholder="Victoire domicile"></div>
     </div>
     <div class="input-row">
@@ -216,12 +284,12 @@
 </div>
 
 <script>
-const tg = window.Telegram?.WebApp || { initData: '', expand: ()=>{}, ready: ()=>{}, showAlert: (m) => alert(m), openLink: (u) => window.open(u, '_blank') };
-tg.expand();
-tg.ready();
+const tg = window.Telegram?.WebApp || { initData: '', expand: ()=>{}, ready: ()=>{}, showAlert: alert, openLink: u => window.open(u, '_blank') };
+tg.expand(); tg.ready();
 
 const API_BASE = 'https://parissportif-api.thomas86renault.workers.dev';
 let userData = null, betsData = [], chartInstance = null, currentPaymentType = null;
+let comboMatches = [{ match: '', sport: 'football', odds: '' }];
 
 const PAYMENT_LINKS = {
   credits: { stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005', paypal: 'https://www.paypal.me/stckb2/3',     crypto: 'https://nowpayments.io/payment/?iid=6103966652' },
@@ -234,6 +302,8 @@ const PAYMENT_LABELS = {
   yearly:  { title: 'Abonnement annuel',  sub: '99€/an — 80 crédits/mois' },
 };
 
+const SPORTS = { football: '⚽', tennis: '🎾', basketball: '🏀', rugby: '🏉', american_football: '🏈', baseball: '⚾', hockey: '🏒' };
+
 const headers = () => ({ 'Content-Type': 'application/json', 'x-telegram-init-data': tg.initData || 'dev' });
 const api = {
   get:   url      => fetch(API_BASE + url, { headers: headers() }).then(r => r.json()),
@@ -244,7 +314,8 @@ const api = {
 async function init() {
   try {
     userData = await api.get('/api/me');
-    updateHeader(); renderDashboard(); loadBets(); loadAnalysesHistory();
+    updateHeader(); renderDashboard(); loadBets(); loadAnalysesHistory(); loadComboHistory();
+    renderComboMatches();
   } catch(e) { console.error(e); }
 }
 
@@ -257,7 +328,8 @@ function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-tab')[['dashboard','analyse','paris','boutique'].indexOf(page)].classList.add('active');
+  const tabs = ['dashboard','analyse','combine','paris','boutique'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(page)].classList.add('active');
 }
 
 async function renderDashboard() {
@@ -296,11 +368,12 @@ async function loadBankrollChart() {
   });
 }
 
+// ── ANALYSE SIMPLE ────────────────────────────────────────────
 async function launchAnalysis() {
   const match = document.getElementById('a-match').value.trim();
   if (!match) { tg.showAlert('Entre le nom du match'); return; }
   const btn = document.getElementById('btn-analyse');
-  btn.disabled = true; btn.textContent = '⏳ Analyse en cours...';
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-inline"></span>Analyse en cours...';
   document.getElementById('analysis-result-container').innerHTML = '';
   try {
     const result = await api.post('/api/analyse', { match_name: match, sport: document.getElementById('a-sport').value, context: document.getElementById('a-context').value });
@@ -314,10 +387,79 @@ async function launchAnalysis() {
 async function loadAnalysesHistory() {
   const analyses = await api.get('/api/analyses');
   const el = document.getElementById('analyses-history');
-  if (!analyses?.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div><p>Aucune analyse encore</p></div>'; return; }
-  el.innerHTML = analyses.slice(0,5).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Analyse'}</div><div class="bet-sport">${a.sport||''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge ${a.was_free?'s-pending':'s-won'}">${a.was_free?'🎁':'1 crédit'}</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p></div>`).join('');
+  const simple = (analyses || []).filter(a => a.sport !== 'combiné');
+  if (!simple.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div><p>Aucune analyse encore</p></div>'; return; }
+  el.innerHTML = simple.slice(0,5).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Analyse'}</div><div class="bet-sport">${SPORTS[a.sport]||'⚽'} ${a.sport||''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge ${a.was_free?'s-pending':'s-won'}">${a.was_free?'🎁':'1 crédit'}</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p></div>`).join('');
 }
 
+// ── COMBINÉ ───────────────────────────────────────────────────
+function renderComboMatches() {
+  const el = document.getElementById('combo-matches-list');
+  el.innerHTML = comboMatches.map((m, i) => `
+    <div class="combo-match-row">
+      <input class="input-field" placeholder="Match ${i+1} (ex: PSG vs Real)" value="${m.match}" oninput="comboMatches[${i}].match=this.value">
+      <select class="input-field" style="max-width:90px" onchange="comboMatches[${i}].sport=this.value">
+        ${Object.entries(SPORTS).map(([k,v]) => `<option value="${k}" ${m.sport===k?'selected':''}>${v}</option>`).join('')}
+      </select>
+      <input class="input-field" style="max-width:70px" type="number" step="0.01" placeholder="Cote" value="${m.odds}" oninput="comboMatches[${i}].odds=this.value">
+      ${comboMatches.length > 1 ? `<button class="btn-remove" onclick="removeComboMatch(${i})">✕</button>` : ''}
+    </div>
+  `).join('');
+
+  // Affiche la cote totale du combiné
+  const validOdds = comboMatches.map(m => parseFloat(m.odds)).filter(o => o > 1);
+  if (validOdds.length >= 2) {
+    const totalOdds = validOdds.reduce((acc, o) => acc * o, 1).toFixed(2);
+    const stake = parseFloat(document.getElementById('c-stake')?.value) || 0;
+    const gain = stake > 0 ? (stake * totalOdds).toFixed(2) : null;
+    el.innerHTML += `<div style="background:var(--surface3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--muted)">
+      Cote combinée: <b style="color:var(--gold)">${totalOdds}</b>${gain ? ` · Gain potentiel: <b style="color:var(--green)">${gain}€</b>` : ''}
+    </div>`;
+  }
+}
+
+function addComboMatch() {
+  if (comboMatches.length >= 10) { tg.showAlert('Maximum 10 matchs par combiné'); return; }
+  comboMatches.push({ match: '', sport: 'football', odds: '' });
+  renderComboMatches();
+}
+
+function removeComboMatch(i) {
+  comboMatches.splice(i, 1);
+  renderComboMatches();
+}
+
+async function launchCombo() {
+  const validMatches = comboMatches.filter(m => m.match.trim().length > 2);
+  if (validMatches.length < 2) { tg.showAlert('Ajoute au moins 2 matchs avec leurs noms'); return; }
+
+  const btn = document.getElementById('btn-combo');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner-inline"></span>Analyse en cours...';
+  document.getElementById('combo-result-container').innerHTML = '';
+
+  try {
+    const result = await api.post('/api/analyse-combo', { matches: validMatches });
+    if (result.error) { if (result.error === 'no_credits') { tg.showAlert('Plus de crédits. Achète un pack.'); goTo('boutique'); return; } throw new Error(result.error); }
+
+    document.getElementById('combo-result-container').innerHTML = `<div class="combo-result">${result.result}</div>`;
+    userData = await api.get('/api/me'); updateHeader(); loadComboHistory();
+
+    // Reset
+    comboMatches = [{ match: '', sport: 'football', odds: '' }, { match: '', sport: 'football', odds: '' }];
+    renderComboMatches();
+  } catch(e) { tg.showAlert('Erreur lors de l\'analyse. Réessaie.'); }
+  finally { btn.disabled = false; btn.textContent = '🎯 Analyser le combiné'; }
+}
+
+async function loadComboHistory() {
+  const analyses = await api.get('/api/analyses');
+  const el = document.getElementById('combo-history');
+  const combos = (analyses || []).filter(a => a.sport === 'combiné');
+  if (!combos.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>Aucun combiné analysé encore</p></div>'; return; }
+  el.innerHTML = combos.slice(0,3).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Combiné'}</div><div class="bet-sport">${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge s-won">1 crédit</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,200)}${a.result?.length>200?'...':''}</p></div>`).join('');
+}
+
+// ── PARIS ────────────────────────────────────────────────────
 async function loadBets() { betsData = await api.get('/api/bets') || []; renderBets(); }
 
 function renderBets() {
@@ -327,7 +469,7 @@ function renderBets() {
     const retour = (parseFloat(b.stake) * parseFloat(b.odds)).toFixed(2);
     const pnlText = b.status !== 'pending' ? `<div style="font-size:13px;font-weight:700;margin-top:6px;color:${b.pnl>0?'var(--green)':b.pnl<0?'var(--red)':'var(--muted)'}">${b.pnl>0?'+':''}${parseFloat(b.pnl).toFixed(2)}€</div>` : '';
     const actions = b.status === 'pending' ? `<div class="bet-actions"><button class="btn-won" onclick="resolveBet('${b.id}','won')">✓ Gagné</button><button class="btn-lost" onclick="resolveBet('${b.id}','lost')">✗ Perdu</button><button class="btn-void" onclick="resolveBet('${b.id}','void')">— Nul</button></div><div class="notif-toggle" onclick="toggleNotif(this,'${b.id}')"><div class="toggle-track" id="toggle-${b.id}"><div class="toggle-thumb"></div></div>Recevoir le résultat sur Telegram</div>` : '';
-    return `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${b.match_name}</div><div class="bet-sport">${b.sport}${b.bet_type?' · '+b.bet_type:''}</div></div><span class="status-badge ${{pending:'s-pending',won:'s-won',lost:'s-lost',void:'s-void'}[b.status]}">${{pending:'En cours',won:'✓ Gagné',lost:'✗ Perdu',void:'Nul'}[b.status]}</span></div><div class="bet-meta"><span>Mise: <b>${parseFloat(b.stake).toFixed(2)}€</b></span><span>Cote: <b>${parseFloat(b.odds).toFixed(2)}</b></span><span>Retour: <b>${retour}€</b></span></div>${pnlText}${actions}</div>`;
+    return `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${b.match_name}</div><div class="bet-sport">${SPORTS[b.sport]||'⚽'} ${b.sport}${b.bet_type?' · '+b.bet_type:''}</div></div><span class="status-badge ${{pending:'s-pending',won:'s-won',lost:'s-lost',void:'s-void'}[b.status]}">${{pending:'En cours',won:'✓ Gagné',lost:'✗ Perdu',void:'Nul'}[b.status]}</span></div><div class="bet-meta"><span>Mise: <b>${parseFloat(b.stake).toFixed(2)}€</b></span><span>Cote: <b>${parseFloat(b.odds).toFixed(2)}</b></span><span>Retour: <b>${retour}€</b></span></div>${pnlText}${actions}</div>`;
   }).join('');
 }
 
@@ -368,9 +510,7 @@ function handlePayment(method) {
   if (!currentPaymentType) return;
   const url = PAYMENT_LINKS[currentPaymentType][method];
   closeModal();
-  setTimeout(() => {
-    try { tg.openLink(url); } catch(e) { window.open(url, '_blank'); }
-  }, 100);
+  setTimeout(() => { try { tg.openLink(url); } catch(e) { window.open(url, '_blank'); } }, 100);
 }
 
 function closeModal() { document.getElementById('payment-modal').classList.add('hidden'); currentPaymentType = null; }
