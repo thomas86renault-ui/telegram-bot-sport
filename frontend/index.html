@@ -10,264 +10,48 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #080810;
-      --surface: #0f0f1a;
-      --surface2: #161625;
-      --surface3: #1e1e30;
-      --border: rgba(255,255,255,0.07);
-      --border2: rgba(255,255,255,0.12);
-      --text: #f0f0f8;
-      --muted: #6b6b8a;
-      --accent: #6c63ff;
-      --accent2: #9d97ff;
-      --green: #00d68f;
-      --red: #ff4f6a;
-      --gold: #ffc94d;
-      --gold2: #ffb020;
+      --bg: #080810; --surface: #0f0f1a; --surface2: #161625; --surface3: #1e1e30;
+      --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+      --text: #f0f0f8; --muted: #6b6b8a; --accent: #6c63ff; --accent2: #9d97ff;
+      --green: #00d68f; --red: #ff4f6a; --gold: #ffc94d;
     }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── NOISE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: .4;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(8,8,16,.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 17px;
-      letter-spacing: -.3px;
-      background: linear-gradient(135deg, #6c63ff, #c084fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .credits-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface2);
-      border: 1px solid var(--border2);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gold);
-    }
-    .credits-pill span { color: var(--muted); font-size: 11px; }
-
-    /* ── NAV TABS ── */
-    .nav {
-      display: flex;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .nav::-webkit-scrollbar { display: none; }
-    .nav-tab {
-      flex: 1;
-      min-width: 70px;
-      padding: 11px 8px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all .2s;
-      white-space: nowrap;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: .4; }
+    .header { position: sticky; top: 0; z-index: 100; background: rgba(8,8,16,.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .header-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 17px; background: linear-gradient(135deg, #6c63ff, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .credits-pill { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--gold); }
+    .nav { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .nav-tab { flex: 1; padding: 11px 8px; text-align: center; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
     .nav-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
     .nav-tab .tab-icon { font-size: 16px; display: block; margin-bottom: 2px; }
-
-    /* ── PAGES ── */
-    .page { display: none; padding: 16px; animation: fadeIn .2s ease; }
+    .page { display: none; padding: 16px; }
     .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-
-    /* ── STAT CARDS ── */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .stat-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: -20px; right: -20px;
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      opacity: .06;
-    }
-    .stat-card.accent::before { background: var(--accent); }
-    .stat-card.green::before { background: var(--green); }
-    .stat-card.gold::before { background: var(--gold); }
-    .stat-card.red::before { background: var(--red); }
+    .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
     .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 6px; }
     .stat-value { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; }
-    .stat-value.c-green { color: var(--green); }
-    .stat-value.c-red { color: var(--red); }
-    .stat-value.c-gold { color: var(--gold); }
-    .stat-value.c-accent { color: var(--accent2); }
+    .stat-value.c-green { color: var(--green); } .stat-value.c-red { color: var(--red); } .stat-value.c-gold { color: var(--gold); } .stat-value.c-accent { color: var(--accent2); }
     .stat-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-    /* ── SECTION TITLE ── */
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 18px 0 10px;
-    }
-
-    /* ── CHART CARD ── */
-    .chart-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    /* ── ANALYSE CARD ── */
-    .analyse-launch {
-      background: linear-gradient(135deg, #1a1535, #0f1628);
-      border: 1px solid rgba(108,99,255,.3);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-    .analyse-launch::after {
-      content: '⚡';
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 40px;
-      opacity: .15;
-    }
-    .analyse-launch h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 18px 0 10px; }
+    .chart-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+    .analyse-launch { background: linear-gradient(135deg, #1a1535, #0f1628); border: 1px solid rgba(108,99,255,.3); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+    .analyse-launch h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
     .analyse-launch p { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
-    .free-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(0,214,143,.1);
-      border: 1px solid rgba(0,214,143,.2);
-      border-radius: 20px;
-      padding: 3px 10px;
-      font-size: 11px;
-      color: var(--green);
-      margin-bottom: 12px;
-    }
-
-    /* ── INPUTS ── */
+    .free-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,214,143,.1); border: 1px solid rgba(0,214,143,.2); border-radius: 20px; padding: 3px 10px; font-size: 11px; color: var(--green); margin-bottom: 12px; }
     .input-group { margin-bottom: 12px; }
-    .input-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; letter-spacing: .3px; }
-    .input-field {
-      width: 100%;
-      padding: 11px 14px;
-      background: var(--surface3);
-      border: 1px solid var(--border2);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      transition: border-color .2s;
-    }
+    .input-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; }
+    .input-field { width: 100%; padding: 11px 14px; background: var(--surface3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif; }
     .input-field:focus { outline: none; border-color: var(--accent); }
     .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    /* ── BUTTONS ── */
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      font-size: 14px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all .2s;
-      letter-spacing: .3px;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), #9d50ff);
-      color: #fff;
-    }
-    .btn-secondary {
-      background: var(--surface3);
-      color: var(--text);
-      border: 1px solid var(--border2);
-    }
-    .btn-green { background: linear-gradient(135deg, #00d68f, #00b377); color: #000; }
-    .btn-sm {
-      width: auto;
-      padding: 7px 14px;
-      font-size: 12px;
-      border-radius: 8px;
-    }
-
-    /* ── BET CARDS ── */
-    .bet-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 10px;
-    }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-family: 'Syne', sans-serif; font-weight: 700; cursor: pointer; transition: all .2s; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), #9d50ff); color: #fff; }
+    .btn-secondary { background: var(--surface3); color: var(--text); border: 1px solid var(--border2); }
+    .bet-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
     .bet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
     .bet-match { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; }
     .bet-sport { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .status-badge {
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
+    .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
     .s-pending { background: rgba(255,201,77,.1); color: var(--gold); border: 1px solid rgba(255,201,77,.2); }
     .s-won { background: rgba(0,214,143,.1); color: var(--green); border: 1px solid rgba(0,214,143,.2); }
     .s-lost { background: rgba(255,79,106,.1); color: var(--red); border: 1px solid rgba(255,79,106,.2); }
@@ -282,124 +66,33 @@
     .toggle-track.on { background: var(--accent); }
     .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: #fff; border-radius: 50%; transition: transform .2s; }
     .toggle-track.on .toggle-thumb { transform: translateX(12px); }
-
-    /* ── PAYMENT PAGE ── */
-    .plan-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: all .2s;
-      position: relative;
-    }
+    .plan-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 12px; cursor: pointer; transition: all .2s; position: relative; }
     .plan-card:active { transform: scale(.98); }
-    .plan-card.featured {
-      border-color: rgba(108,99,255,.4);
-      background: linear-gradient(135deg, #13112a, #0f0f1a);
-    }
-    .plan-badge {
-      position: absolute;
-      top: -8px; right: 14px;
-      background: linear-gradient(135deg, var(--accent), #9d50ff);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 10px;
-      border-radius: 20px;
-      letter-spacing: .5px;
-    }
+    .plan-card.featured { border-color: rgba(108,99,255,.4); background: linear-gradient(135deg, #13112a, #0f0f1a); }
+    .plan-badge { position: absolute; top: -8px; right: 14px; background: linear-gradient(135deg, var(--accent), #9d50ff); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; }
     .plan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .plan-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
     .plan-price { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--gold); }
     .plan-price span { font-size: 12px; color: var(--muted); font-weight: 400; }
     .plan-features { font-size: 12px; color: var(--muted); line-height: 1.8; }
-    .plan-features li { list-style: none; padding-left: 0; }
+    .plan-features li { list-style: none; }
     .plan-features li::before { content: '✓ '; color: var(--green); font-weight: 700; }
-
-    /* ── PAYMENT MODAL ── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.8);
-      backdrop-filter: blur(8px);
-      z-index: 200;
-      display: flex;
-      align-items: flex-end;
-    }
-    .modal-sheet {
-      background: var(--surface);
-      border-radius: 24px 24px 0 0;
-      padding: 24px 20px 32px;
-      width: 100%;
-      border-top: 1px solid var(--border2);
-      animation: slideUp .25s ease;
-    }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: flex-end; }
+    .modal-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 24px 20px 32px; width: 100%; border-top: 1px solid var(--border2); }
     .modal-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
     .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
     .payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-    .payment-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border2);
-      background: var(--surface2);
-      cursor: pointer;
-      transition: all .2s;
-      text-decoration: none;
-      color: var(--text);
-    }
-    .payment-btn:active { transform: scale(.98); border-color: var(--accent); }
+    .payment-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border2); background: var(--surface2); cursor: pointer; color: var(--text); }
+    .payment-btn:active { border-color: var(--accent); }
     .payment-icon { font-size: 22px; width: 32px; text-align: center; }
     .payment-info { flex: 1; }
     .payment-name { font-size: 14px; font-weight: 600; }
     .payment-desc { font-size: 11px; color: var(--muted); margin-top: 1px; }
     .payment-arrow { color: var(--muted); font-size: 16px; }
-
-    /* ── ANALYSIS RESULT ── */
-    .analysis-result {
-      background: var(--surface2);
-      border: 1px solid rgba(108,99,255,.2);
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 14px;
-      white-space: pre-wrap;
-      font-size: 13px;
-      line-height: 1.7;
-      color: var(--text);
-    }
-
-    /* ── LOADING ── */
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(8,8,16,.9);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      gap: 14px;
-    }
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid var(--border2);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text { font-size: 13px; color: var(--muted); }
-
-    /* ── EMPTY STATE ── */
+    .analysis-result { background: var(--surface2); border: 1px solid rgba(108,99,255,.2); border-radius: 14px; padding: 16px; margin-top: 14px; white-space: pre-wrap; font-size: 13px; line-height: 1.7; }
     .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
     .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: .5; }
     .empty p { font-size: 13px; line-height: 1.6; }
-
     .hidden { display: none !important; }
     .mt-10 { margin-top: 10px; }
     .mb-14 { margin-bottom: 14px; }
@@ -407,233 +100,115 @@
 </head>
 <body>
 
-<!-- ── HEADER ── -->
 <div class="header">
   <div class="header-logo">⚽ Paris IA</div>
-  <div class="credits-pill">
-    <span id="hdr-credits">—</span> crédits
-    <span id="hdr-free"></span>
-  </div>
+  <div class="credits-pill"><span id="hdr-credits">—</span> crédits <span id="hdr-free"></span></div>
 </div>
 
-<!-- ── NAV ── -->
 <div class="nav">
-  <div class="nav-tab active" onclick="goTo('dashboard')">
-    <span class="tab-icon">📊</span>Dashboard
-  </div>
-  <div class="nav-tab" onclick="goTo('analyse')">
-    <span class="tab-icon">🤖</span>Analyser
-  </div>
-  <div class="nav-tab" onclick="goTo('paris')">
-    <span class="tab-icon">🎯</span>Paris
-  </div>
-  <div class="nav-tab" onclick="goTo('boutique')">
-    <span class="tab-icon">💳</span>Boutique
-  </div>
+  <div class="nav-tab active" onclick="goTo('dashboard')"><span class="tab-icon">📊</span>Dashboard</div>
+  <div class="nav-tab" onclick="goTo('analyse')"><span class="tab-icon">🤖</span>Analyser</div>
+  <div class="nav-tab" onclick="goTo('paris')"><span class="tab-icon">🎯</span>Paris</div>
+  <div class="nav-tab" onclick="goTo('boutique')"><span class="tab-icon">💳</span>Boutique</div>
 </div>
 
-<!-- ══════════════ DASHBOARD ══════════════ -->
 <div id="page-dashboard" class="page active">
-  <div id="dash-loading" class="loading-overlay hidden">
-    <div class="spinner"></div>
-    <div class="loading-text">Chargement...</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Bankroll</div><div class="stat-value c-gold" id="s-bankroll">—</div><div class="stat-sub" id="s-initial">Dépôt —</div></div>
+    <div class="stat-card"><div class="stat-label">ROI global</div><div class="stat-value c-green" id="s-roi">—</div><div class="stat-sub" id="s-pnl">P&L —</div></div>
+    <div class="stat-card"><div class="stat-label">Taux réussite</div><div class="stat-value c-accent" id="s-winrate">—</div><div class="stat-sub" id="s-wl">— / —</div></div>
+    <div class="stat-card"><div class="stat-label">Paris totaux</div><div class="stat-value" id="s-total">—</div><div class="stat-sub">matchs joués</div></div>
   </div>
-
-  <div class="stats-grid" id="stats-grid">
-    <div class="stat-card gold">
-      <div class="stat-label">Bankroll</div>
-      <div class="stat-value c-gold" id="s-bankroll">—</div>
-      <div class="stat-sub" id="s-initial">Dépôt initial —</div>
-    </div>
-    <div class="stat-card green">
-      <div class="stat-label">ROI global</div>
-      <div class="stat-value c-green" id="s-roi">—</div>
-      <div class="stat-sub" id="s-pnl">P&L —</div>
-    </div>
-    <div class="stat-card accent">
-      <div class="stat-label">Taux réussite</div>
-      <div class="stat-value c-accent" id="s-winrate">—</div>
-      <div class="stat-sub" id="s-wl">— / —</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Paris totaux</div>
-      <div class="stat-value" id="s-total">—</div>
-      <div class="stat-sub">matchs joués</div>
-    </div>
-  </div>
-
   <div class="chart-card">
     <div class="section-title" style="margin-top:0;margin-bottom:10px">Évolution bankroll</div>
     <canvas id="chart-bankroll" height="160"></canvas>
   </div>
-
   <div class="section-title">Abonnement</div>
-  <div class="bet-card" id="sub-status-card">
+  <div class="bet-card">
     <div class="bet-header">
-      <div>
-        <div class="bet-match" id="sub-plan-name">Plan gratuit</div>
-        <div class="bet-sport">Analyses à la carte uniquement</div>
-      </div>
+      <div><div class="bet-match" id="sub-plan-name">Plan gratuit</div><div class="bet-sport">Analyses à la carte uniquement</div></div>
       <span class="status-badge s-pending" id="sub-badge">Gratuit</span>
     </div>
     <button class="btn btn-primary mt-10" onclick="goTo('boutique')">Passer à Premium</button>
   </div>
 </div>
 
-<!-- ══════════════ ANALYSER ══════════════ -->
 <div id="page-analyse" class="page">
   <div class="analyse-launch">
     <div id="free-badge-container"></div>
     <h3>Analyse IA d'un match</h3>
     <p>Entre le nom du match, l'IA consulte les stats et les cotes en temps réel pour te donner un pronostic argumenté.</p>
   </div>
-
-  <div class="input-group">
-    <label class="input-label">Match *</label>
-    <input class="input-field" id="a-match" placeholder="PSG vs Real Madrid">
-  </div>
-  <div class="input-group">
-    <label class="input-label">Sport</label>
-    <select class="input-field" id="a-sport">
-      <option value="football">⚽ Football</option>
-      <option value="tennis">🎾 Tennis</option>
-      <option value="basketball">🏀 Basketball</option>
-      <option value="rugby">🏉 Rugby</option>
-    </select>
-  </div>
-  <div class="input-group">
-    <label class="input-label">Contexte (optionnel)</label>
-    <input class="input-field" id="a-context" placeholder="Blessés, météo, enjeu...">
-  </div>
-
-  <button class="btn btn-primary" id="btn-analyse" onclick="launchAnalysis()">
-    ⚡ Lancer l'analyse
-  </button>
-
+  <div class="input-group"><label class="input-label">Match *</label><input class="input-field" id="a-match" placeholder="PSG vs Real Madrid"></div>
+  <div class="input-group"><label class="input-label">Sport</label><select class="input-field" id="a-sport"><option value="football">⚽ Football</option><option value="tennis">🎾 Tennis</option><option value="basketball">🏀 Basketball</option><option value="rugby">🏉 Rugby</option></select></div>
+  <div class="input-group"><label class="input-label">Contexte (optionnel)</label><input class="input-field" id="a-context" placeholder="Blessés, météo, enjeu..."></div>
+  <button class="btn btn-primary" id="btn-analyse" onclick="launchAnalysis()">⚡ Lancer l'analyse</button>
   <div id="analysis-result-container"></div>
-
   <div class="section-title">Dernières analyses</div>
   <div id="analyses-history"></div>
 </div>
 
-<!-- ══════════════ PARIS ══════════════ -->
 <div id="page-paris" class="page">
   <button class="btn btn-primary mb-14" onclick="openAddBet()">+ Saisir un pari</button>
   <div id="bets-list"></div>
 </div>
 
-<!-- ══════════════ BOUTIQUE ══════════════ -->
 <div id="page-boutique" class="page">
   <div class="section-title" style="margin-top:0">Crédits à la carte</div>
   <div class="plan-card" onclick="openPayment('credits')">
-    <div class="plan-header">
-      <div class="plan-name">🎯 Pack 10 crédits</div>
-      <div class="plan-price">3€</div>
-    </div>
-    <ul class="plan-features">
-      <li>10 analyses IA</li>
-      <li>Valable sans limite de temps</li>
-      <li>Paiement unique</li>
-    </ul>
+    <div class="plan-header"><div class="plan-name">🎯 Pack 10 crédits</div><div class="plan-price">3€</div></div>
+    <ul class="plan-features"><li>10 analyses IA</li><li>Valable sans limite de temps</li><li>Paiement unique</li></ul>
   </div>
-
   <div class="section-title">Abonnements</div>
   <div class="plan-card" onclick="openPayment('monthly')">
-    <div class="plan-header">
-      <div class="plan-name">📅 Mensuel</div>
-      <div class="plan-price">14.99€ <span>/mois</span></div>
-    </div>
-    <ul class="plan-features">
-      <li>60 crédits par mois</li>
-      <li>Analyse automatique chaque soir</li>
-      <li>1 analyse gratuite par semaine</li>
-      <li>Notifications résultats</li>
-    </ul>
+    <div class="plan-header"><div class="plan-name">📅 Mensuel</div><div class="plan-price">14.99€ <span>/mois</span></div></div>
+    <ul class="plan-features"><li>60 crédits par mois</li><li>Analyse automatique chaque soir</li><li>1 analyse gratuite par semaine</li><li>Notifications résultats</li></ul>
   </div>
-
   <div class="plan-card featured" onclick="openPayment('yearly')">
     <div class="plan-badge">MEILLEURE OFFRE</div>
-    <div class="plan-header">
-      <div class="plan-name">🔥 Annuel</div>
-      <div class="plan-price">99€ <span>/an</span></div>
-    </div>
-    <ul class="plan-features">
-      <li>80 crédits par mois</li>
-      <li>Analyse automatique chaque soir</li>
-      <li>1 analyse gratuite par semaine</li>
-      <li>Notifications résultats</li>
-      <li>Économise 80€ vs mensuel</li>
-    </ul>
+    <div class="plan-header"><div class="plan-name">🔥 Annuel</div><div class="plan-price">99€ <span>/an</span></div></div>
+    <ul class="plan-features"><li>80 crédits par mois</li><li>Analyse automatique chaque soir</li><li>1 analyse gratuite par semaine</li><li>Notifications résultats</li><li>Économise 80€ vs mensuel</li></ul>
   </div>
 </div>
 
-<!-- ══════════════ MODAL PAIEMENT ══════════════ -->
+<!-- MODAL PAIEMENT -->
 <div class="modal-overlay hidden" id="payment-modal">
   <div class="modal-sheet">
     <div class="modal-title" id="modal-title">Choisir le paiement</div>
     <div class="modal-sub" id="modal-sub">Sélectionne ton mode de paiement</div>
     <div class="payment-options">
-      <a class="payment-btn" id="pay-stripe">
+      <div class="payment-btn" onclick="handlePayment('stripe')">
         <div class="payment-icon">💳</div>
-        <div class="payment-info">
-          <div class="payment-name">Carte bancaire</div>
-          <div class="payment-desc">Visa, Mastercard, CB — via Stripe</div>
-        </div>
+        <div class="payment-info"><div class="payment-name">Carte bancaire</div><div class="payment-desc">Visa, Mastercard — via Stripe</div></div>
         <div class="payment-arrow">›</div>
-      </a>
-      <a class="payment-btn" id="pay-paypal">
+      </div>
+      <div class="payment-btn" onclick="handlePayment('paypal')">
         <div class="payment-icon">🅿️</div>
-        <div class="payment-info">
-          <div class="payment-name">PayPal</div>
-          <div class="payment-desc">Paiement sécurisé PayPal</div>
-        </div>
+        <div class="payment-info"><div class="payment-name">PayPal</div><div class="payment-desc">Paiement sécurisé PayPal</div></div>
         <div class="payment-arrow">›</div>
-      </a>
-      <a class="payment-btn" id="pay-crypto">
+      </div>
+      <div class="payment-btn" onclick="handlePayment('crypto')">
         <div class="payment-icon">₿</div>
-        <div class="payment-info">
-          <div class="payment-name">Crypto</div>
-          <div class="payment-desc">BTC, ETH, USDT et plus</div>
-        </div>
+        <div class="payment-info"><div class="payment-name">Crypto</div><div class="payment-desc">BTC, ETH, USDT et plus</div></div>
         <div class="payment-arrow">›</div>
-      </a>
+      </div>
     </div>
     <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
   </div>
 </div>
 
-<!-- ══════════════ MODAL ADD BET ══════════════ -->
+<!-- MODAL ADD BET -->
 <div class="modal-overlay hidden" id="add-bet-modal">
   <div class="modal-sheet">
     <div class="modal-title">Nouveau pari</div>
-    <div class="input-group">
-      <label class="input-label">Match *</label>
-      <input class="input-field" id="b-match" placeholder="PSG vs Real Madrid">
+    <div class="input-group"><label class="input-label">Match *</label><input class="input-field" id="b-match" placeholder="PSG vs Real Madrid"></div>
+    <div class="input-row">
+      <div class="input-group"><label class="input-label">Sport</label><select class="input-field" id="b-sport"><option value="football">⚽ Football</option><option value="tennis">🎾 Tennis</option><option value="basketball">🏀 Basketball</option><option value="rugby">🏉 Rugby</option></select></div>
+      <div class="input-group"><label class="input-label">Type de pari</label><input class="input-field" id="b-type" placeholder="Victoire domicile"></div>
     </div>
     <div class="input-row">
-      <div class="input-group">
-        <label class="input-label">Sport</label>
-        <select class="input-field" id="b-sport">
-          <option value="football">⚽ Football</option>
-          <option value="tennis">🎾 Tennis</option>
-          <option value="basketball">🏀 Basketball</option>
-          <option value="rugby">🏉 Rugby</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Type de pari</label>
-        <input class="input-field" id="b-type" placeholder="Victoire domicile">
-      </div>
-    </div>
-    <div class="input-row">
-      <div class="input-group">
-        <label class="input-label">Mise (€) *</label>
-        <input class="input-field" id="b-stake" type="number" step="0.01" placeholder="10">
-      </div>
-      <div class="input-group">
-        <label class="input-label">Cote *</label>
-        <input class="input-field" id="b-odds" type="number" step="0.01" placeholder="1.85">
-      </div>
+      <div class="input-group"><label class="input-label">Mise (€) *</label><input class="input-field" id="b-stake" type="number" step="0.01" placeholder="10"></div>
+      <div class="input-group"><label class="input-label">Cote *</label><input class="input-field" id="b-odds" type="number" step="0.01" placeholder="1.85"></div>
     </div>
     <button class="btn btn-primary mt-10" onclick="submitBet()">Enregistrer</button>
     <button class="btn btn-secondary mt-10" onclick="closeAddBet()">Annuler</button>
@@ -641,58 +216,36 @@
 </div>
 
 <script>
-const tg = window.Telegram?.WebApp || { initData: '', expand: ()=>{}, ready: ()=>{}, showAlert: alert };
+const tg = window.Telegram?.WebApp || { initData: '', expand: ()=>{}, ready: ()=>{}, showAlert: (m) => alert(m), openLink: (u) => window.open(u, '_blank') };
 tg.expand();
 tg.ready();
 
 const API_BASE = 'https://parissportif-api.thomas86renault.workers.dev';
-let userData = null;
-let betsData = [];
-let chartInstance = null;
-let currentPaymentType = null;
+let userData = null, betsData = [], chartInstance = null, currentPaymentType = null;
 
-// ── PAYMENT LINKS (à remplir plus tard) ──────────────────────
 const PAYMENT_LINKS = {
-  credits: {
-    stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005',
-    paypal: 'https://www.paypal.me/stckb2/3',
-    crypto: 'https://nowpayments.io/payment/?iid=6103966652'
-  },
-  monthly: {
-    stripe: 'https://buy.stripe.com/14A14fgMo0KF1LH1Qogw007',
-    paypal: 'https://www.paypal.me/stckb2/14.99',
-    crypto: 'https://nowpayments.io/payment/?iid=6410825735'
-  },
-  yearly: {
-    stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005',
-    paypal: 'https://www.paypal.me/stckb2/99',
-    crypto: 'https://nowpayments.io/payment/?iid=4511571204'
-  },
+  credits: { stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005', paypal: 'https://www.paypal.me/stckb2/3',     crypto: 'https://nowpayments.io/payment/?iid=6103966652' },
+  monthly: { stripe: 'https://buy.stripe.com/14A14fgMo0KF1LH1Qogw007', paypal: 'https://www.paypal.me/stckb2/14.99', crypto: 'https://nowpayments.io/payment/?iid=6410825735' },
+  yearly:  { stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005', paypal: 'https://www.paypal.me/stckb2/99',    crypto: 'https://nowpayments.io/payment/?iid=4511571204' },
+};
+const PAYMENT_LABELS = {
+  credits: { title: 'Pack 10 crédits', sub: '3€ — paiement unique' },
+  monthly: { title: 'Abonnement mensuel', sub: '14.99€/mois — 60 crédits' },
+  yearly:  { title: 'Abonnement annuel',  sub: '99€/an — 80 crédits/mois' },
 };
 
-// ── AUTH ──────────────────────────────────────────────────────
-const headers = () => ({
-  'Content-Type': 'application/json',
-  'x-telegram-init-data': tg.initData || 'dev',
-});
-
+const headers = () => ({ 'Content-Type': 'application/json', 'x-telegram-init-data': tg.initData || 'dev' });
 const api = {
-  get: url => fetch(API_BASE + url, { headers: headers() }).then(r => r.json()),
-  post: (url, body) => fetch(API_BASE + url, { method: 'POST', headers: headers(), body: JSON.stringify(body) }).then(r => r.json()),
-  patch: (url, body) => fetch(API_BASE + url, { method: 'PATCH', headers: headers(), body: JSON.stringify(body) }).then(r => r.json()),
+  get:   url      => fetch(API_BASE + url, { headers: headers() }).then(r => r.json()),
+  post:  (url, b) => fetch(API_BASE + url, { method: 'POST',  headers: headers(), body: JSON.stringify(b) }).then(r => r.json()),
+  patch: (url, b) => fetch(API_BASE + url, { method: 'PATCH', headers: headers(), body: JSON.stringify(b) }).then(r => r.json()),
 };
 
-// ── INIT ──────────────────────────────────────────────────────
 async function init() {
   try {
     userData = await api.get('/api/me');
-    updateHeader();
-    renderDashboard();
-    loadBets();
-    loadAnalysesHistory();
-  } catch(e) {
-    console.error(e);
-  }
+    updateHeader(); renderDashboard(); loadBets(); loadAnalysesHistory();
+  } catch(e) { console.error(e); }
 }
 
 function updateHeader() {
@@ -700,7 +253,6 @@ function updateHeader() {
   document.getElementById('hdr-free').textContent = userData.free_analysis_used ? '' : '🎁';
 }
 
-// ── NAVIGATION ───────────────────────────────────────────────
 function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -708,36 +260,27 @@ function goTo(page) {
   document.querySelectorAll('.nav-tab')[['dashboard','analyse','paris','boutique'].indexOf(page)].classList.add('active');
 }
 
-// ── DASHBOARD ────────────────────────────────────────────────
 async function renderDashboard() {
   if (!userData?.stats) return;
   const s = userData.stats;
-
   document.getElementById('s-bankroll').textContent = parseFloat(s.bankroll_current).toFixed(2) + '€';
   document.getElementById('s-initial').textContent = 'Dépôt ' + parseFloat(s.bankroll_initial).toFixed(2) + '€';
-
   const roi = parseFloat(s.bankroll_roi);
   const roiEl = document.getElementById('s-roi');
   roiEl.textContent = (roi >= 0 ? '+' : '') + roi + '%';
   roiEl.className = 'stat-value ' + (roi >= 0 ? 'c-green' : 'c-red');
-
   document.getElementById('s-pnl').textContent = 'P&L ' + (parseFloat(s.total_pnl) >= 0 ? '+' : '') + parseFloat(s.total_pnl).toFixed(2) + '€';
   document.getElementById('s-winrate').textContent = s.win_rate + '%';
   document.getElementById('s-wl').textContent = s.wins + ' gagnés / ' + s.losses + ' perdus';
   document.getElementById('s-total').textContent = s.wins + s.losses;
-
-  // Abonnement
   if (userData.subscription_status === 'active') {
     document.getElementById('sub-plan-name').textContent = 'Abonnement Premium actif';
     document.getElementById('sub-badge').textContent = '✓ Actif';
     document.getElementById('sub-badge').className = 'status-badge s-won';
   }
-
-  // Free badge dans analyser
   if (!userData.free_analysis_used) {
     document.getElementById('free-badge-container').innerHTML = '<div class="free-badge">🎁 Analyse gratuite disponible cette semaine</div>';
   }
-
   loadBankrollChart();
 }
 
@@ -746,152 +289,57 @@ async function loadBankrollChart() {
   const ctx = document.getElementById('chart-bankroll');
   if (!ctx || !history?.length) return;
   if (chartInstance) chartInstance.destroy();
-
   chartInstance = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels: history.map(h => h.date === 'Départ' ? 'Départ' : new Date(h.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })),
-      datasets: [{
-        data: history.map(h => h.bankroll),
-        borderColor: '#6c63ff',
-        backgroundColor: 'rgba(108,99,255,.08)',
-        borderWidth: 2,
-        pointRadius: 3,
-        pointBackgroundColor: '#6c63ff',
-        fill: true,
-        tension: 0.4,
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#6b6b8a', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,.04)' } },
-        y: { ticks: { color: '#6b6b8a', font: { size: 10 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,.04)' } }
-      }
-    }
+    data: { labels: history.map(h => h.date === 'Départ' ? 'Départ' : new Date(h.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })), datasets: [{ data: history.map(h => h.bankroll), borderColor: '#6c63ff', backgroundColor: 'rgba(108,99,255,.08)', borderWidth: 2, pointRadius: 3, fill: true, tension: 0.4 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#6b6b8a', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,.04)' } }, y: { ticks: { color: '#6b6b8a', font: { size: 10 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,.04)' } } } }
   });
 }
 
-// ── ANALYSE ──────────────────────────────────────────────────
 async function launchAnalysis() {
   const match = document.getElementById('a-match').value.trim();
   if (!match) { tg.showAlert('Entre le nom du match'); return; }
-
   const btn = document.getElementById('btn-analyse');
-  btn.disabled = true;
-  btn.textContent = '⏳ Analyse en cours...';
+  btn.disabled = true; btn.textContent = '⏳ Analyse en cours...';
   document.getElementById('analysis-result-container').innerHTML = '';
-
   try {
-    const result = await api.post('/api/analyse', {
-      match_name: match,
-      sport: document.getElementById('a-sport').value,
-      context: document.getElementById('a-context').value,
-    });
-
-    if (result.error) {
-      if (result.error === 'no_credits') {
-        tg.showAlert('Plus de crédits disponibles. Achète un pack dans la boutique.');
-        goTo('boutique');
-        return;
-      }
-      throw new Error(result.error);
-    }
-
-    document.getElementById('analysis-result-container').innerHTML = `
-      <div class="analysis-result">${result.result}</div>
-    `;
-    userData = await api.get('/api/me');
-    updateHeader();
-    loadAnalysesHistory();
-  } catch(e) {
-    tg.showAlert('Erreur lors de l\'analyse. Réessaie.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '⚡ Lancer l\'analyse';
-  }
+    const result = await api.post('/api/analyse', { match_name: match, sport: document.getElementById('a-sport').value, context: document.getElementById('a-context').value });
+    if (result.error) { if (result.error === 'no_credits') { tg.showAlert('Plus de crédits. Achète un pack dans la boutique.'); goTo('boutique'); return; } throw new Error(result.error); }
+    document.getElementById('analysis-result-container').innerHTML = `<div class="analysis-result">${result.result}</div>`;
+    userData = await api.get('/api/me'); updateHeader(); loadAnalysesHistory();
+  } catch(e) { tg.showAlert('Erreur lors de l\'analyse. Réessaie.'); }
+  finally { btn.disabled = false; btn.textContent = '⚡ Lancer l\'analyse'; }
 }
 
 async function loadAnalysesHistory() {
   const analyses = await api.get('/api/analyses');
   const el = document.getElementById('analyses-history');
-  if (!analyses?.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div><p>Aucune analyse encore</p></div>';
-    return;
-  }
-  el.innerHTML = analyses.slice(0, 5).map(a => `
-    <div class="bet-card">
-      <div class="bet-header">
-        <div>
-          <div class="bet-match">${a.match_name || 'Analyse'}</div>
-          <div class="bet-sport">${a.sport || ''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div>
-        </div>
-        <span class="status-badge ${a.was_free ? 's-pending' : 's-won'}">${a.was_free ? '🎁' : '1 crédit'}</span>
-      </div>
-      <p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p>
-    </div>
-  `).join('');
+  if (!analyses?.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div><p>Aucune analyse encore</p></div>'; return; }
+  el.innerHTML = analyses.slice(0,5).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Analyse'}</div><div class="bet-sport">${a.sport||''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge ${a.was_free?'s-pending':'s-won'}">${a.was_free?'🎁':'1 crédit'}</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p></div>`).join('');
 }
 
-// ── PARIS ────────────────────────────────────────────────────
-async function loadBets() {
-  betsData = await api.get('/api/bets') || [];
-  renderBets();
-}
+async function loadBets() { betsData = await api.get('/api/bets') || []; renderBets(); }
 
 function renderBets() {
   const el = document.getElementById('bets-list');
-  if (!betsData.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>Aucun pari enregistré.<br>Saisis ton premier pari !</p></div>';
-    return;
-  }
+  if (!betsData.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>Aucun pari enregistré.<br>Saisis ton premier pari !</p></div>'; return; }
   el.innerHTML = betsData.map(b => {
     const retour = (parseFloat(b.stake) * parseFloat(b.odds)).toFixed(2);
     const pnlText = b.status !== 'pending' ? `<div style="font-size:13px;font-weight:700;margin-top:6px;color:${b.pnl>0?'var(--green)':b.pnl<0?'var(--red)':'var(--muted)'}">${b.pnl>0?'+':''}${parseFloat(b.pnl).toFixed(2)}€</div>` : '';
-    const actions = b.status === 'pending' ? `
-      <div class="bet-actions">
-        <button class="btn-won" onclick="resolveBet('${b.id}','won')">✓ Gagné</button>
-        <button class="btn-lost" onclick="resolveBet('${b.id}','lost')">✗ Perdu</button>
-        <button class="btn-void" onclick="resolveBet('${b.id}','void')">— Nul</button>
-      </div>
-      <div class="notif-toggle" onclick="toggleNotif(this, '${b.id}')">
-        <div class="toggle-track" id="toggle-${b.id}"><div class="toggle-thumb"></div></div>
-        Recevoir le résultat sur Telegram
-      </div>` : '';
-    return `
-      <div class="bet-card">
-        <div class="bet-header">
-          <div>
-            <div class="bet-match">${b.match_name}</div>
-            <div class="bet-sport">${b.sport}${b.bet_type?' · '+b.bet_type:''}</div>
-          </div>
-          <span class="status-badge ${{pending:'s-pending',won:'s-won',lost:'s-lost',void:'s-void'}[b.status]}">${{pending:'En cours',won:'✓ Gagné',lost:'✗ Perdu',void:'Nul'}[b.status]}</span>
-        </div>
-        <div class="bet-meta">
-          <span>Mise: <b>${parseFloat(b.stake).toFixed(2)}€</b></span>
-          <span>Cote: <b>${parseFloat(b.odds).toFixed(2)}</b></span>
-          <span>Retour: <b>${retour}€</b></span>
-        </div>
-        ${pnlText}
-        ${actions}
-      </div>`;
+    const actions = b.status === 'pending' ? `<div class="bet-actions"><button class="btn-won" onclick="resolveBet('${b.id}','won')">✓ Gagné</button><button class="btn-lost" onclick="resolveBet('${b.id}','lost')">✗ Perdu</button><button class="btn-void" onclick="resolveBet('${b.id}','void')">— Nul</button></div><div class="notif-toggle" onclick="toggleNotif(this,'${b.id}')"><div class="toggle-track" id="toggle-${b.id}"><div class="toggle-thumb"></div></div>Recevoir le résultat sur Telegram</div>` : '';
+    return `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${b.match_name}</div><div class="bet-sport">${b.sport}${b.bet_type?' · '+b.bet_type:''}</div></div><span class="status-badge ${{pending:'s-pending',won:'s-won',lost:'s-lost',void:'s-void'}[b.status]}">${{pending:'En cours',won:'✓ Gagné',lost:'✗ Perdu',void:'Nul'}[b.status]}</span></div><div class="bet-meta"><span>Mise: <b>${parseFloat(b.stake).toFixed(2)}€</b></span><span>Cote: <b>${parseFloat(b.odds).toFixed(2)}</b></span><span>Retour: <b>${retour}€</b></span></div>${pnlText}${actions}</div>`;
   }).join('');
 }
 
 function toggleNotif(el, betId) {
   const track = document.getElementById('toggle-' + betId);
   const isOn = track.classList.toggle('on');
-  // TODO: appel API pour activer/désactiver la notification
-  console.log('Notif', betId, isOn);
+  api.patch('/api/bets/' + betId + '/notify', { notify: isOn });
 }
 
 async function resolveBet(id, status) {
   await api.patch('/api/bets/' + id, { status });
-  userData = await api.get('/api/me');
-  updateHeader();
-  renderDashboard();
-  loadBets();
+  userData = await api.get('/api/me'); updateHeader(); renderDashboard(); loadBets();
 }
 
 function openAddBet() { document.getElementById('add-bet-modal').classList.remove('hidden'); }
@@ -902,13 +350,7 @@ async function submitBet() {
   const stake = parseFloat(document.getElementById('b-stake').value);
   const odds = parseFloat(document.getElementById('b-odds').value);
   if (!match || !stake || !odds || odds <= 1) { tg.showAlert('Remplis tous les champs (cote > 1)'); return; }
-
-  await api.post('/api/bets', {
-    match_name: match,
-    sport: document.getElementById('b-sport').value,
-    bet_type: document.getElementById('b-type').value,
-    stake, odds,
-  });
+  await api.post('/api/bets', { match_name: match, sport: document.getElementById('b-sport').value, bet_type: document.getElementById('b-type').value, stake, odds });
   closeAddBet();
   ['b-match','b-type','b-stake','b-odds'].forEach(id => document.getElementById(id).value = '');
   loadBets();
@@ -917,40 +359,22 @@ async function submitBet() {
 // ── PAIEMENT ─────────────────────────────────────────────────
 function openPayment(type) {
   currentPaymentType = type;
-  const info = PAYMENT_LABELS[type];
-  document.getElementById('modal-title').textContent = info.title;
-  document.getElementById('modal-sub').textContent = info.sub;
-
-  const links = PAYMENT_LINKS[type];
-
-  ['pay-stripe', 'pay-paypal', 'pay-crypto'].forEach(id => {
-    const el = document.getElementById(id);
-    const linkMap = { 'pay-stripe': links.stripe, 'pay-paypal': links.paypal, 'pay-crypto': links.crypto };
-    const url = linkMap[id];
-    
-    el.replaceWith(el.cloneNode(true)); // Supprime les anciens listeners
-    const fresh = document.getElementById(id);
-    
-    fresh.addEventListener('click', () => {
-      if (url === '#') {
-        tg.showAlert('Bientôt disponible');
-        return;
-      }
-      try {
-        tg.openLink(url);
-      } catch(e) {
-        try {
-          tg.openTelegramLink(url);
-        } catch(e2) {
-          window.location.href = url;
-        }
-      }
-    });
-  });
-
+  document.getElementById('modal-title').textContent = PAYMENT_LABELS[type].title;
+  document.getElementById('modal-sub').textContent = PAYMENT_LABELS[type].sub;
   document.getElementById('payment-modal').classList.remove('hidden');
 }
-// ── START ─────────────────────────────────────────────────────
+
+function handlePayment(method) {
+  if (!currentPaymentType) return;
+  const url = PAYMENT_LINKS[currentPaymentType][method];
+  closeModal();
+  setTimeout(() => {
+    try { tg.openLink(url); } catch(e) { window.open(url, '_blank'); }
+  }, 100);
+}
+
+function closeModal() { document.getElementById('payment-modal').classList.add('hidden'); currentPaymentType = null; }
+
 init();
 </script>
 </body>
