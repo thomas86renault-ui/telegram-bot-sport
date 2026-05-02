@@ -4,6 +4,8 @@ const { runAnalysis } = require('../services/analysisService');
 const { createCreditsCheckout, createSubscriptionCheckout } = require('../services/stripeService');
 const logger = require('../config/logger');
 
+const WEBAPP_URL = 'https://telegram-bot-sport.thomas86renault.workers.dev';
+
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 
 // ─── /start ──────────────────────────────────────────────────
@@ -22,7 +24,7 @@ bot.onText(/\/start/, async (msg) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '⚽ Analyser un match', callback_data: 'analyse' }],
-          [{ text: '📊 Mon dashboard', web_app: { url: process.env.TELEGRAM_WEBAPP_URL } }],
+          [{ text: '📊 Mon dashboard', web_app: { url: WEBAPP_URL } }],
           [{ text: '💰 Crédits & Abonnements', callback_data: 'shop' }],
           [{ text: '❓ Aide', callback_data: 'help' }],
         ]
@@ -55,8 +57,8 @@ bot.onText(/\/credits/, async (msg) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '🛒 Acheter 10 crédits (3€)', callback_data: 'buy_credits' }],
-          [{ text: '📦 Abonnement mensuel', callback_data: 'sub_monthly' }],
-          [{ text: '📦 Abonnement annuel', callback_data: 'sub_yearly' }],
+          [{ text: '📅 Abonnement mensuel', callback_data: 'sub_monthly' }],
+          [{ text: '🔥 Abonnement annuel', callback_data: 'sub_yearly' }],
         ]
       }
     }
@@ -74,20 +76,19 @@ bot.onText(/\/help/, async (msg) => {
     `/start - Menu principal\n` +
     `/analyse - Lancer une analyse\n` +
     `/credits - Voir tes crédits\n` +
-    `/help - Cette aide\n\n` +
-    `📊 Dashboard complet via le bouton ci-dessous`,
+    `/help - Cette aide`,
     {
       parse_mode: 'Markdown',
       reply_markup: {
-        inline_keyboard: [[
-          { text: '📊 Ouvrir le dashboard', web_app: { url: process.env.TELEGRAM_WEBAPP_URL } }
-        ]]
+        inline_keyboard: [
+          [{ text: '📊 Ouvrir le dashboard', web_app: { url: WEBAPP_URL } }],
+        ]
       }
     }
   );
 });
 
-// ─── Callback queries (boutons) ───────────────────────────────
+// ─── Callback queries ─────────────────────────────────────────
 bot.on('callback_query', async (query) => {
   const chatId = query.message.chat.id;
   const userId = query.from;
@@ -107,8 +108,8 @@ bot.on('callback_query', async (query) => {
           reply_markup: {
             inline_keyboard: [
               [{ text: '🎯 Pack 10 crédits — 3€', callback_data: 'buy_credits' }],
-              [{ text: '📅 Abonnement mensuel — 9.99€/mois (30 crédits)', callback_data: 'sub_monthly' }],
-              [{ text: '🔥 Abonnement annuel — 79€/an (50 crédits/mois)', callback_data: 'sub_yearly' }],
+              [{ text: '📅 Abonnement mensuel — 14.99€/mois', callback_data: 'sub_monthly' }],
+              [{ text: '🔥 Abonnement annuel — 99€/an', callback_data: 'sub_yearly' }],
             ]
           }
         }
@@ -118,14 +119,18 @@ bot.on('callback_query', async (query) => {
     case 'buy_credits': {
       const user = await getUserByTelegramId(userId.id);
       if (!user) break;
-      const url = await createCreditsCheckout(user);
-      await bot.sendMessage(chatId,
-        `🛒 *Achat de crédits*\n\nClique ci-dessous pour payer 3€ et recevoir 10 crédits instantanément.`,
-        {
-          parse_mode: 'Markdown',
-          reply_markup: { inline_keyboard: [[{ text: '💳 Payer maintenant', url }]] }
-        }
-      );
+      try {
+        const url = await createCreditsCheckout(user);
+        await bot.sendMessage(chatId,
+          `🛒 *Achat de crédits*\n\nClique ci-dessous pour payer 3€ et recevoir 10 crédits.`,
+          {
+            parse_mode: 'Markdown',
+            reply_markup: { inline_keyboard: [[{ text: '💳 Payer maintenant', url }]] }
+          }
+        );
+      } catch(e) {
+        await bot.sendMessage(chatId, '❌ Paiement non configuré pour l\'instant.');
+      }
       break;
     }
 
@@ -134,35 +139,51 @@ bot.on('callback_query', async (query) => {
       const plan = query.data === 'sub_monthly' ? 'monthly' : 'yearly';
       const user = await getUserByTelegramId(userId.id);
       if (!user) break;
-      const url = await createSubscriptionCheckout(user, plan);
-      const label = plan === 'monthly' ? 'mensuel — 9.99€/mois' : 'annuel — 79€/an';
-      await bot.sendMessage(chatId,
-        `📦 *Abonnement ${label}*\n\nInclut des crédits chaque mois + analyse gratuite hebdo.`,
-        {
-          parse_mode: 'Markdown',
-          reply_markup: { inline_keyboard: [[{ text: '💳 Souscrire', url }]] }
-        }
-      );
+      try {
+        const url = await createSubscriptionCheckout(user, plan);
+        const label = plan === 'monthly' ? 'mensuel — 14.99€/mois' : 'annuel — 99€/an';
+        await bot.sendMessage(chatId,
+          `📦 *Abonnement ${label}*`,
+          {
+            parse_mode: 'Markdown',
+            reply_markup: { inline_keyboard: [[{ text: '💳 Souscrire', url }]] }
+          }
+        );
+      } catch(e) {
+        await bot.sendMessage(chatId, '❌ Paiement non configuré pour l\'instant.');
+      }
       break;
     }
 
     case 'help':
-      await bot.emit('text', { ...query.message, text: '/help', from: query.from });
+      await bot.sendMessage(chatId,
+        `🤖 *Commandes disponibles:*\n\n` +
+        `/start - Menu principal\n` +
+        `/analyse - Lancer une analyse\n` +
+        `/credits - Voir tes crédits\n` +
+        `/help - Cette aide`,
+        {
+          parse_mode: 'Markdown',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '📊 Ouvrir le dashboard', web_app: { url: WEBAPP_URL } }],
+            ]
+          }
+        }
+      );
       break;
   }
 });
 
-// ─── Analyse flow (state machine simple) ──────────────────────
-const pendingAnalysis = new Map(); // telegram_id -> state
+// ─── Analyse flow ─────────────────────────────────────────────
+const pendingAnalysis = new Map();
 
 const promptForMatch = async (chatId, telegramUser) => {
   const { canAnalyze, reason, isFree, user } = await checkAnalysisPermission(telegramUser.id);
 
   if (!canAnalyze) {
     await bot.sendMessage(chatId,
-      `❌ *Pas de crédits disponibles*\n\n` +
-      `Tu n'as plus de crédits pour lancer une analyse.\n` +
-      `Achète un pack ou souscris à un abonnement 👇`,
+      `❌ *Pas de crédits disponibles*\n\nAchète un pack ou souscris à un abonnement 👇`,
       {
         parse_mode: 'Markdown',
         reply_markup: {
@@ -176,12 +197,13 @@ const promptForMatch = async (chatId, telegramUser) => {
     return;
   }
 
-  const freeText = isFree ? ' _(analyse gratuite de la semaine)_' : ` _(1 crédit sera débité — solde: ${user.credits})_`;
+  const freeText = isFree
+    ? ' _(analyse gratuite de la semaine)_'
+    : ` _(1 crédit — solde: ${user.credits})_`;
 
   await bot.sendMessage(chatId,
-    `⚽ *Quelle match veux-tu analyser ?*${freeText}\n\n` +
-    `Exemple: \`PSG vs Real Madrid\` ou \`Djokovic vs Alcaraz\`\n\n` +
-    `Précise aussi le sport si nécessaire (foot, tennis, basket...)`,
+    `⚽ *Quel match veux-tu analyser ?*${freeText}\n\n` +
+    `Exemple: \`PSG vs Real Madrid\``,
     { parse_mode: 'Markdown' }
   );
 
@@ -198,7 +220,7 @@ bot.on('message', async (msg) => {
     pendingAnalysis.delete(msg.from.id);
 
     const waitMsg = await bot.sendMessage(msg.chat.id,
-      `⏳ Analyse en cours pour *${msg.text}*...\n_L'IA consulte les stats et les cotes_`,
+      `⏳ Analyse en cours pour *${msg.text}*...`,
       { parse_mode: 'Markdown' }
     );
 
@@ -210,12 +232,9 @@ bot.on('message', async (msg) => {
       });
 
       await consumeCredit(state.user.id, state.isFree, analysis_id);
-
       await bot.deleteMessage(msg.chat.id, waitMsg.message_id);
 
-      const oddsText = oddsData
-        ? `\n\n📈 *Cotes live:* ${oddsData.odds}`
-        : '';
+      const oddsText = oddsData ? `\n\n📈 *Cotes:* ${oddsData.odds}` : '';
 
       await bot.sendMessage(msg.chat.id,
         `🔍 *Analyse: ${msg.text}*${oddsText}\n\n${result}`,
@@ -224,7 +243,7 @@ bot.on('message', async (msg) => {
           reply_markup: {
             inline_keyboard: [
               [{ text: '⚽ Nouvelle analyse', callback_data: 'analyse' }],
-              [{ text: '📊 Voir mon dashboard', web_app: { url: process.env.TELEGRAM_WEBAPP_URL } }],
+              [{ text: '📊 Mon dashboard', web_app: { url: WEBAPP_URL } }],
             ]
           }
         }
@@ -232,7 +251,7 @@ bot.on('message', async (msg) => {
     } catch (err) {
       logger.error('Erreur analyse:', err);
       await bot.editMessageText(
-        '❌ Une erreur est survenue. Tes crédits n\'ont pas été débités. Réessaie.',
+        '❌ Erreur lors de l\'analyse. Tes crédits n\'ont pas été débités.',
         { chat_id: msg.chat.id, message_id: waitMsg.message_id }
       );
     }
@@ -241,7 +260,7 @@ bot.on('message', async (msg) => {
 
 const detectSport = (text) => {
   const t = text.toLowerCase();
-  if (t.includes('tennis') || t.includes('atp') || t.includes('wta')) return 'tennis';
+  if (t.includes('tennis') || t.includes('atp')) return 'tennis';
   if (t.includes('basket') || t.includes('nba')) return 'basketball';
   if (t.includes('rugby')) return 'rugby';
   return 'football';
