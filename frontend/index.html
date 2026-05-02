@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Sport IA — Dashboard</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0f10;
+      --surface: #1a1a1e;
+      --surface2: #242428;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0f0;
+      --text-muted: #888;
+      --accent: #4f8ef7;
+      --green: #34c774;
+      --red: #f74f4f;
+      --gold: #f5a623;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; min-height: 100vh; }
+
+    .header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .credits-badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 13px; color: var(--gold); font-weight: 600; }
+
+    .tabs { display: flex; border-bottom: 1px solid var(--border); }
+    .tab { flex: 1; padding: 12px; text-align: center; font-size: 13px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .content { padding: 16px; }
+
+    /* Stats grid */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .stat-value { font-size: 22px; font-weight: 700; }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+    .stat-value.gold { color: var(--gold); }
+
+    /* Chart */
+    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .chart-title { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+
+    /* Bets */
+    .bet-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .bet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .bet-match { font-size: 14px; font-weight: 600; }
+    .bet-sport { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .bet-status { font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .status-pending { background: rgba(245,166,35,.15); color: var(--gold); }
+    .status-won { background: rgba(52,199,116,.15); color: var(--green); }
+    .status-lost { background: rgba(247,79,79,.15); color: var(--red); }
+    .bet-details { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); }
+    .bet-pnl { font-size: 14px; font-weight: 700; }
+    .bet-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-small { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; }
+    .btn-small.won { border-color: var(--green); color: var(--green); }
+    .btn-small.lost { border-color: var(--red); color: var(--red); }
+
+    /* Add bet form */
+    .add-btn { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-bottom: 16px; }
+    .form-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: flex-end; z-index: 100; }
+    .form-sheet { background: var(--surface); border-radius: 20px 20px 0 0; padding: 20px; width: 100%; max-height: 80vh; overflow-y: auto; }
+    .form-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+    .form-input { width: 100%; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-submit { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+    .form-cancel { width: 100%; padding: 12px; background: transparent; color: var(--text-muted); border: none; font-size: 14px; cursor: pointer; margin-top: 8px; }
+
+    /* Empty state */
+    .empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+    /* Loading */
+    .loading { display: flex; justify-content: center; padding: 40px; }
+    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚽ Sport IA</h1>
+  <div class="credits-badge" id="credits-badge">— crédits</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
+  <div class="tab" onclick="switchTab('bets')">Paris</div>
+  <div class="tab" onclick="switchTab('analyses')">Analyses</div>
+</div>
+
+<!-- ─── DASHBOARD ─── -->
+<div id="tab-dashboard" class="content">
+  <div class="loading"><div class="spinner"></div></div>
+</div>
+
+<!-- ─── PARIS ─── -->
+<div id="tab-bets" class="content hidden">
+  <button class="add-btn" onclick="openAddBet()">+ Saisir un pari</button>
+  <div id="bets-list"></div>
+</div>
+
+<!-- ─── ANALYSES ─── -->
+<div id="tab-analyses" class="content hidden">
+  <div id="analyses-list"></div>
+</div>
+
+<!-- ─── FORM ADD BET ─── -->
+<div class="form-overlay hidden" id="add-bet-form">
+  <div class="form-sheet">
+    <div class="form-title">Nouveau pari</div>
+    <div class="form-group">
+      <label class="form-label">Match *</label>
+      <input class="form-input" id="f-match" placeholder="PSG vs Real Madrid">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Sport</label>
+        <select class="form-input" id="f-sport">
+          <option value="football">Football</option>
+          <option value="tennis">Tennis</option>
+          <option value="basketball">Basket</option>
+          <option value="rugby">Rugby</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type de pari</label>
+        <input class="form-input" id="f-type" placeholder="Victoire domicile">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Mise (€) *</label>
+        <input class="form-input" id="f-stake" type="number" step="0.01" placeholder="10">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cote *</label>
+        <input class="form-input" id="f-odds" type="number" step="0.01" placeholder="1.85">
+      </div>
+    </div>
+    <button class="form-submit" onclick="submitBet()">Enregistrer le pari</button>
+    <button class="form-cancel" onclick="closeAddBet()">Annuler</button>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
+tg.ready();
+
+const API = '';  // même domaine — on utilise le chemin relatif
+let userData = null;
+let betsData = [];
+let chartInstance = null;
+
+// ─── Auth headers ──────────────────────────────────────────────
+const authHeaders = () => ({
+  'Content-Type': 'application/json',
+  'x-telegram-init-data': tg.initData || 'dev_mode',
+});
+
+// ─── Fetch helpers ─────────────────────────────────────────────
+const get = (url) => fetch(url, { headers: authHeaders() }).then(r => r.json());
+const post = (url, body) => fetch(url, { method: 'POST', headers: authHeaders(), body: JSON.stringify(body) }).then(r => r.json());
+const patch = (url, body) => fetch(url, { method: 'PATCH', headers: authHeaders(), body: JSON.stringify(body) }).then(r => r.json());
+
+// ─── Init ──────────────────────────────────────────────────────
+async function init() {
+  try {
+    userData = await get('/api/me');
+    document.getElementById('credits-badge').textContent = `${userData.credits} crédit${userData.credits !== 1 ? 's' : ''}`;
+    renderDashboard();
+    loadBets();
+    loadAnalyses();
+  } catch (e) {
+    console.error('Init error:', e);
+    document.getElementById('tab-dashboard').innerHTML = '<div class="empty"><div class="empty-icon">❌</div><p>Erreur de chargement</p></div>';
+  }
+}
+
+// ─── Dashboard ─────────────────────────────────────────────────
+async function renderDashboard() {
+  const s = userData.stats;
+  const pnlClass = parseFloat(s.total_pnl) >= 0 ? 'green' : 'red';
+  const roiClass = parseFloat(s.bankroll_roi) >= 0 ? 'green' : 'red';
+
+  document.getElementById('tab-dashboard').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Bankroll actuelle</div>
+        <div class="stat-value gold">${s.bankroll_current.toFixed(2)}€</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">ROI global</div>
+        <div class="stat-value ${roiClass}">${s.bankroll_roi > 0 ? '+' : ''}${s.bankroll_roi}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Taux de réussite</div>
+        <div class="stat-value">${s.win_rate}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">P&L total</div>
+        <div class="stat-value ${pnlClass}">${parseFloat(s.total_pnl) >= 0 ? '+' : ''}${s.total_pnl}€</div>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat-card">
+        <div class="stat-label">Paris gagnés</div>
+        <div class="stat-value green">${s.wins} ✓</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Paris perdus</div>
+        <div class="stat-value red">${s.losses} ✗</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Évolution bankroll</div>
+      <canvas id="bankroll-chart" height="180"></canvas>
+    </div>
+  `;
+
+  loadBankrollChart();
+}
+
+async function loadBankrollChart() {
+  const history = await get('/api/bankroll/history');
+  const ctx = document.getElementById('bankroll-chart');
+  if (!ctx) return;
+
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: history.map(h => h.date === 'Départ' ? 'Départ' : new Date(h.date).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })),
+      datasets: [{
+        data: history.map(h => h.bankroll),
+        borderColor: '#4f8ef7',
+        backgroundColor: 'rgba(79,142,247,.1)',
+        borderWidth: 2,
+        pointRadius: 3,
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,.05)' } },
+        y: { ticks: { color: '#888', font: { size: 11 }, callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,.05)' } }
+      }
+    }
+  });
+}
+
+// ─── Paris ────────────────────────────────────────────────────
+async function loadBets() {
+  betsData = await get('/api/bets');
+  renderBets();
+}
+
+function renderBets() {
+  const list = document.getElementById('bets-list');
+  if (!betsData.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>Aucun pari enregistré</p></div>';
+    return;
+  }
+
+  list.innerHTML = betsData.map(bet => {
+    const pnlText = bet.status !== 'pending'
+      ? `<span class="bet-pnl ${bet.pnl > 0 ? 'green' : bet.pnl < 0 ? 'red' : ''}" style="color:${bet.pnl > 0 ? 'var(--green)' : bet.pnl < 0 ? 'var(--red)' : 'var(--text-muted)'}">${bet.pnl > 0 ? '+' : ''}${parseFloat(bet.pnl).toFixed(2)}€</span>`
+      : '';
+    const actions = bet.status === 'pending'
+      ? `<div class="bet-actions">
+           <button class="btn-small won" onclick="resolveBet('${bet.id}', 'won')">✓ Gagné</button>
+           <button class="btn-small lost" onclick="resolveBet('${bet.id}', 'lost')">✗ Perdu</button>
+           <button class="btn-small" onclick="resolveBet('${bet.id}', 'void')">— Nul</button>
+         </div>` : '';
+    return `
+      <div class="bet-card">
+        <div class="bet-header">
+          <div>
+            <div class="bet-match">${bet.match_name}</div>
+            <div class="bet-sport">${bet.sport}${bet.bet_type ? ' · ' + bet.bet_type : ''}</div>
+          </div>
+          <span class="bet-status status-${bet.status}">${{ pending: 'En cours', won: '✓ Gagné', lost: '✗ Perdu', void: '— Nul' }[bet.status]}</span>
+        </div>
+        <div class="bet-details">
+          <span>Mise: <b>${parseFloat(bet.stake).toFixed(2)}€</b></span>
+          <span>Cote: <b>${parseFloat(bet.odds).toFixed(2)}</b></span>
+          <span>Retour: <b>${(parseFloat(bet.stake) * parseFloat(bet.odds)).toFixed(2)}€</b></span>
+        </div>
+        ${pnlText}
+        ${actions}
+      </div>`;
+  }).join('');
+}
+
+async function resolveBet(id, status) {
+  await patch(`/api/bets/${id}`, { status });
+  userData = await get('/api/me');
+  document.getElementById('credits-badge').textContent = `${userData.credits} crédits`;
+  renderDashboard();
+  loadBets();
+}
+
+// ─── Analyses ─────────────────────────────────────────────────
+async function loadAnalyses() {
+  const analyses = await get('/api/analyses');
+  const list = document.getElementById('analyses-list');
+
+  if (!analyses.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div><p>Aucune analyse lancée</p></div>';
+    return;
+  }
+
+  list.innerHTML = analyses.map(a => `
+    <div class="bet-card">
+      <div class="bet-header">
+        <div>
+          <div class="bet-match">${a.match_name || 'Analyse'}</div>
+          <div class="bet-sport">${a.sport || ''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div>
+        </div>
+        <span class="bet-status ${a.was_free ? 'status-pending' : 'status-won'}">${a.was_free ? '🎁 Gratuit' : '1 crédit'}</span>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:8px;line-height:1.5;white-space:pre-wrap">${(a.result || '').substring(0, 300)}${a.result?.length > 300 ? '...' : ''}</p>
+    </div>
+  `).join('');
+}
+
+// ─── Add bet form ─────────────────────────────────────────────
+function openAddBet() { document.getElementById('add-bet-form').classList.remove('hidden'); }
+function closeAddBet() { document.getElementById('add-bet-form').classList.add('hidden'); }
+
+async function submitBet() {
+  const match = document.getElementById('f-match').value.trim();
+  const stake = parseFloat(document.getElementById('f-stake').value);
+  const odds = parseFloat(document.getElementById('f-odds').value);
+
+  if (!match || !stake || !odds || odds <= 1) {
+    tg.showAlert('Remplis tous les champs requis (cote > 1)');
+    return;
+  }
+
+  const bet = {
+    match_name: match,
+    sport: document.getElementById('f-sport').value,
+    bet_type: document.getElementById('f-type').value,
+    stake, odds,
+  };
+
+  await post('/api/bets', bet);
+  closeAddBet();
+  loadBets();
+  // Reset form
+  ['f-match','f-type','f-stake','f-odds'].forEach(id => document.getElementById(id).value = '');
+}
+
+// ─── Tabs ──────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const tabs = ['dashboard','bets','analyses'];
+    t.classList.toggle('active', tabs[i] === name);
+  });
+  ['dashboard','bets','analyses'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== name);
+  });
+}
+
+// ─── Start ────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
