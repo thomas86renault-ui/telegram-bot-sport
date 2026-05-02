@@ -653,15 +653,21 @@ let currentPaymentType = null;
 
 // ── PAYMENT LINKS (à remplir plus tard) ──────────────────────
 const PAYMENT_LINKS = {
-  credits:  { stripe: '#', paypal: '#', crypto: '#' },
-  monthly:  { stripe: '#', paypal: '#', crypto: '#' },
-  yearly:   { stripe: '#', paypal: '#', crypto: '#' },
-};
-
-const PAYMENT_LABELS = {
-  credits:  { title: 'Pack 10 crédits', sub: '3€ — paiement unique' },
-  monthly:  { title: 'Abonnement mensuel', sub: '14.99€/mois — 60 crédits' },
-  yearly:   { title: 'Abonnement annuel', sub: '99€/an — 80 crédits/mois' },
+  credits: {
+    stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005',
+    paypal: 'https://www.paypal.me/stckb2/3',
+    crypto: 'https://nowpayments.io/payment/?iid=6103966652'
+  },
+  monthly: {
+    stripe: 'https://buy.stripe.com/14A14fgMo0KF1LH1Qogw007',
+    paypal: 'https://www.paypal.me/stckb2/14.99',
+    crypto: 'https://nowpayments.io/payment/?iid=6410825735'
+  },
+  yearly: {
+    stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005',
+    paypal: 'https://www.paypal.me/stckb2/99',
+    crypto: 'https://nowpayments.io/payment/?iid=4511571204'
+  },
 };
 
 // ── AUTH ──────────────────────────────────────────────────────
