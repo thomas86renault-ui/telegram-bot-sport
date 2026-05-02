@@ -923,24 +923,24 @@ function openPayment(type) {
 
   const links = PAYMENT_LINKS[type];
   
-  // Stripe
-  document.getElementById('pay-stripe').onclick = (e) => {
-    e.preventDefault();
-    if (links.stripe !== '#') tg.openLink(links.stripe);
-    else tg.showAlert('Paiement carte bientôt disponible');
-  };
-  
-  // PayPal
-  document.getElementById('pay-paypal').onclick = (e) => {
-    e.preventDefault();
-    tg.openLink(links.paypal);
-  };
-  
-  // Crypto
-  document.getElementById('pay-crypto').onclick = (e) => {
-    e.preventDefault();
-    tg.openLink(links.crypto);
-  };
+// Stripe
+document.getElementById('pay-stripe').onclick = (e) => {
+  e.preventDefault();
+  if (links.stripe !== '#') window.open(links.stripe, '_blank');
+  else tg.showAlert('Paiement carte bientôt disponible');
+};
+
+// PayPal
+document.getElementById('pay-paypal').onclick = (e) => {
+  e.preventDefault();
+  window.open(links.paypal, '_blank');
+};
+
+// Crypto
+document.getElementById('pay-crypto').onclick = (e) => {
+  e.preventDefault();
+  window.open(links.crypto, '_blank');
+};
 
   document.getElementById('payment-modal').classList.remove('hidden');
 }
