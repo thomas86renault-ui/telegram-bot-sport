@@ -45,7 +45,6 @@
     .input-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; }
     .input-field { width: 100%; padding: 11px 14px; background: var(--surface3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif; }
     .input-field:focus { outline: none; border-color: var(--accent); }
-    textarea.input-field { resize: vertical; min-height: 120px; line-height: 1.6; }
     .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 14px; font-family: 'Syne', sans-serif; font-weight: 700; cursor: pointer; transition: all .2s; }
     .btn-primary { background: linear-gradient(135deg, var(--accent), #9d50ff); color: #fff; }
@@ -70,15 +69,11 @@
     .toggle-track.on { background: var(--accent); }
     .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; background: #fff; border-radius: 50%; transition: transform .2s; }
     .toggle-track.on .toggle-thumb { transform: translateX(12px); }
-    /* Combiné */
     .combo-match-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
     .combo-match-row .input-field { flex: 1; }
     .btn-remove { background: rgba(255,79,106,.1); color: var(--red); border: 1px solid rgba(255,79,106,.2); border-radius: 8px; padding: 8px 10px; font-size: 14px; cursor: pointer; white-space: nowrap; }
     .btn-add-match { background: var(--surface3); color: var(--accent2); border: 1px solid rgba(108,99,255,.3); border-radius: 10px; padding: 10px; font-size: 13px; cursor: pointer; width: 100%; margin-bottom: 12px; text-align: center; }
     .combo-result { background: var(--surface2); border: 1px solid rgba(255,176,32,.2); border-radius: 14px; padding: 16px; margin-top: 14px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; }
-    .combo-odds-row { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
-    .combo-odds-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
-    /* Plans */
     .plan-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 12px; cursor: pointer; transition: all .2s; position: relative; }
     .plan-card:active { transform: scale(.98); }
     .plan-card.featured { border-color: rgba(108,99,255,.4); background: linear-gradient(135deg, #13112a, #0f0f1a); }
@@ -90,7 +85,6 @@
     .plan-features { font-size: 12px; color: var(--muted); line-height: 1.8; }
     .plan-features li { list-style: none; }
     .plan-features li::before { content: '✓ '; color: var(--green); font-weight: 700; }
-    /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: flex-end; }
     .modal-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 24px 20px 32px; width: 100%; border-top: 1px solid var(--border2); }
     .modal-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
@@ -129,7 +123,7 @@
   <div class="nav-tab" onclick="goTo('boutique')"><span class="tab-icon">💳</span>Boutique</div>
 </div>
 
-<!-- ══ DASHBOARD ══ -->
+<!-- DASHBOARD -->
 <div id="page-dashboard" class="page active">
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-label">Bankroll</div><div class="stat-value c-gold" id="s-bankroll">—</div><div class="stat-sub" id="s-initial">Dépôt —</div></div>
@@ -151,9 +145,9 @@
   </div>
 </div>
 
-<!-- ══ ANALYSER ══ -->
+<!-- ANALYSER -->
 <div id="page-analyse" class="page">
-  <div class="info-banner">💡 Toutes tes analyses sont sauvegardées ici automatiquement. Tu peux aussi lancer une analyse via <b>/analyse</b> sur Telegram.</div>
+  <div class="info-banner">💡 Toutes tes analyses sont sauvegardées ici. Tu peux aussi lancer une analyse via <b>/analyse</b> sur Telegram.</div>
   <div class="analyse-launch">
     <div id="free-badge-container"></div>
     <h3>Analyse IA d'un match</h3>
@@ -167,24 +161,28 @@
       <option value="tennis">🎾 Tennis</option>
       <option value="basketball">🏀 Basketball / NBA</option>
       <option value="rugby">🏉 Rugby</option>
-      <option value="american_football">🏈 NFL / Football américain</option>
+      <option value="american_football">🏈 NFL</option>
       <option value="baseball">⚾ Baseball / MLB</option>
       <option value="hockey">🏒 Hockey / NHL</option>
     </select>
   </div>
   <div class="input-group"><label class="input-label">Contexte (optionnel)</label><input class="input-field" id="a-context" placeholder="Blessés, météo, enjeu..."></div>
-  <button class="btn btn-primary" id="btn-analyse" onclick="launchAnalysis()">⚡ Lancer l'analyse</button>
+  <button class="btn btn-primary" id="btn-analyse" onclick="launchAnalysis()">⚡ Lancer l'analyse (1 crédit)</button>
   <div id="analysis-result-container"></div>
   <div class="section-title">Dernières analyses</div>
   <div id="analyses-history"></div>
 </div>
 
-<!-- ══ COMBINÉ ══ -->
+<!-- COMBINÉ -->
 <div id="page-combine" class="page">
-  <div class="info-banner">💡 Analyse un combiné de plusieurs matchs en une fois. Tu peux aussi utiliser <b>/combine</b> sur Telegram.</div>
+  <div class="info-banner">💡 Tu peux aussi utiliser <b>/combine</b> sur Telegram. Tous tes combinés sont sauvegardés automatiquement.</div>
   <div class="analyse-launch">
     <h3>🎯 Analyse de combiné</h3>
     <p>Ajoute tes matchs un par un. L'IA analysera chaque match et te donnera un verdict global sur ton combiné.</p>
+  </div>
+
+  <div class="info-banner" style="background:rgba(255,176,32,.08);border-color:rgba(255,176,32,.2);color:var(--gold)">
+    💳 <b>Tarif :</b> 2-3 matchs = 2 crédits · 4-5 = 3 crédits · 6-7 = 5 crédits · 8-10 = 6 crédits
   </div>
 
   <div id="combo-matches-list"></div>
@@ -192,26 +190,25 @@
 
   <div class="input-group">
     <label class="input-label">Mise totale envisagée (€)</label>
-    <input class="input-field" id="c-stake" type="number" step="0.01" placeholder="10">
+    <input class="input-field" id="c-stake" type="number" step="0.01" placeholder="10" oninput="renderComboMatches()">
   </div>
 
-  <div id="combo-price-info" class="info-banner" style="margin-bottom:12px">
-  💳 2-3 matchs = 2 crédits · 4-5 = 3 · 6-7 = 5 · 8-10 = 6
-</div>
-  <div id="combo-result-container"></div>
+  <div id="combo-price-display" style="margin-bottom:12px"></div>
 
+  <button class="btn btn-gold" id="btn-combo" onclick="launchCombo()">🎯 Analyser le combiné</button>
+  <div id="combo-result-container"></div>
   <div class="section-title">Derniers combinés</div>
   <div id="combo-history"></div>
 </div>
 
-<!-- ══ PARIS ══ -->
+<!-- PARIS -->
 <div id="page-paris" class="page">
   <div class="info-banner">💡 Saisis tes paris ici pour suivre ta bankroll. Les résultats peuvent être mis à jour manuellement ou automatiquement via les notifications.</div>
   <button class="btn btn-primary mb-14" onclick="openAddBet()">+ Saisir un pari</button>
   <div id="bets-list"></div>
 </div>
 
-<!-- ══ BOUTIQUE ══ -->
+<!-- BOUTIQUE -->
 <div id="page-boutique" class="page">
   <div class="section-title" style="margin-top:0">Crédits à la carte</div>
   <div class="plan-card" onclick="openPayment('credits')">
@@ -291,7 +288,7 @@ tg.expand(); tg.ready();
 
 const API_BASE = 'https://parissportif-api.thomas86renault.workers.dev';
 let userData = null, betsData = [], chartInstance = null, currentPaymentType = null;
-let comboMatches = [{ match: '', sport: 'football', odds: '' }];
+let comboMatches = [{ match: '', sport: 'football', odds: '' }, { match: '', sport: 'football', odds: '' }];
 
 const PAYMENT_LINKS = {
   credits: { stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005', paypal: 'https://www.paypal.me/stckb2/3',     crypto: 'https://nowpayments.io/payment/?iid=6103966652' },
@@ -303,8 +300,9 @@ const PAYMENT_LABELS = {
   monthly: { title: 'Abonnement mensuel', sub: '14.99€/mois — 60 crédits' },
   yearly:  { title: 'Abonnement annuel',  sub: '99€/an — 80 crédits/mois' },
 };
-
 const SPORTS = { football: '⚽', tennis: '🎾', basketball: '🏀', rugby: '🏉', american_football: '🏈', baseball: '⚾', hockey: '🏒' };
+
+const getComboCredits = (n) => n <= 3 ? 2 : n <= 5 ? 3 : n <= 7 ? 5 : 6;
 
 const headers = () => ({ 'Content-Type': 'application/json', 'x-telegram-init-data': tg.initData || 'dev' });
 const api = {
@@ -330,8 +328,7 @@ function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  const tabs = ['dashboard','analyse','combine','paris','boutique'];
-  document.querySelectorAll('.nav-tab')[tabs.indexOf(page)].classList.add('active');
+  document.querySelectorAll('.nav-tab')[['dashboard','analyse','combine','paris','boutique'].indexOf(page)].classList.add('active');
 }
 
 async function renderDashboard() {
@@ -370,7 +367,6 @@ async function loadBankrollChart() {
   });
 }
 
-// ── ANALYSE SIMPLE ────────────────────────────────────────────
 async function launchAnalysis() {
   const match = document.getElementById('a-match').value.trim();
   if (!match) { tg.showAlert('Entre le nom du match'); return; }
@@ -383,7 +379,7 @@ async function launchAnalysis() {
     document.getElementById('analysis-result-container').innerHTML = `<div class="analysis-result">${result.result}</div>`;
     userData = await api.get('/api/me'); updateHeader(); loadAnalysesHistory();
   } catch(e) { tg.showAlert('Erreur lors de l\'analyse. Réessaie.'); }
-  finally { btn.disabled = false; btn.textContent = '⚡ Lancer l\'analyse'; }
+  finally { btn.disabled = false; btn.textContent = '⚡ Lancer l\'analyse (1 crédit)'; }
 }
 
 async function loadAnalysesHistory() {
@@ -399,25 +395,33 @@ function renderComboMatches() {
   const el = document.getElementById('combo-matches-list');
   el.innerHTML = comboMatches.map((m, i) => `
     <div class="combo-match-row">
-      <input class="input-field" placeholder="Match ${i+1} (ex: PSG vs Real)" value="${m.match}" oninput="comboMatches[${i}].match=this.value">
-      <select class="input-field" style="max-width:90px" onchange="comboMatches[${i}].sport=this.value">
+      <input class="input-field" placeholder="Match ${i+1}" value="${m.match}" oninput="comboMatches[${i}].match=this.value">
+      <select class="input-field" style="max-width:50px" onchange="comboMatches[${i}].sport=this.value">
         ${Object.entries(SPORTS).map(([k,v]) => `<option value="${k}" ${m.sport===k?'selected':''}>${v}</option>`).join('')}
       </select>
-      <input class="input-field" style="max-width:70px" type="number" step="0.01" placeholder="Cote" value="${m.odds}" oninput="comboMatches[${i}].odds=this.value">
-      ${comboMatches.length > 1 ? `<button class="btn-remove" onclick="removeComboMatch(${i})">✕</button>` : ''}
+      <input class="input-field" style="max-width:65px" type="number" step="0.01" placeholder="Cote" value="${m.odds}" oninput="comboMatches[${i}].odds=this.value;updateComboPriceDisplay()">
+      ${comboMatches.length > 2 ? `<button class="btn-remove" onclick="removeComboMatch(${i})">✕</button>` : ''}
     </div>
   `).join('');
+  updateComboPriceDisplay();
+}
 
-  // Affiche la cote totale du combiné
+function updateComboPriceDisplay() {
+  const validCount = comboMatches.filter(m => m.match.trim().length > 2).length;
+  const creditsNeeded = validCount >= 2 ? getComboCredits(validCount) : 0;
   const validOdds = comboMatches.map(m => parseFloat(m.odds)).filter(o => o > 1);
-  if (validOdds.length >= 2) {
-    const totalOdds = validOdds.reduce((acc, o) => acc * o, 1).toFixed(2);
-    const stake = parseFloat(document.getElementById('c-stake')?.value) || 0;
-    const gain = stake > 0 ? (stake * totalOdds).toFixed(2) : null;
-    el.innerHTML += `<div style="background:var(--surface3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--muted)">
-      Cote combinée: <b style="color:var(--gold)">${totalOdds}</b>${gain ? ` · Gain potentiel: <b style="color:var(--green)">${gain}€</b>` : ''}
-    </div>`;
-  }
+  const totalOdds = validOdds.length >= 2 ? validOdds.reduce((a, b) => a * b, 1).toFixed(2) : null;
+  const stake = parseFloat(document.getElementById('c-stake')?.value) || 0;
+  const gain = stake > 0 && totalOdds ? (stake * parseFloat(totalOdds)).toFixed(2) : null;
+
+  const el = document.getElementById('combo-price-display');
+  if (validCount < 2) { el.innerHTML = ''; return; }
+
+  el.innerHTML = `<div style="background:var(--surface3);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--muted)">
+    ${validCount} matchs · <b style="color:var(--gold)">${creditsNeeded} crédits</b>
+    ${totalOdds ? ` · Cote combinée: <b style="color:var(--accent2)">${totalOdds}</b>` : ''}
+    ${gain ? ` · Gain potentiel: <b style="color:var(--green)">${gain}€</b>` : ''}
+  </div>`;
 }
 
 function addComboMatch() {
@@ -435,18 +439,23 @@ async function launchCombo() {
   const validMatches = comboMatches.filter(m => m.match.trim().length > 2);
   if (validMatches.length < 2) { tg.showAlert('Ajoute au moins 2 matchs avec leurs noms'); return; }
 
+  const creditsNeeded = getComboCredits(validMatches.length);
   const btn = document.getElementById('btn-combo');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner-inline"></span>Analyse en cours...';
+  btn.disabled = true; btn.innerHTML = `<span class="spinner-inline"></span>Analyse en cours (${creditsNeeded} crédits)...`;
   document.getElementById('combo-result-container').innerHTML = '';
 
   try {
     const result = await api.post('/api/analyse-combo', { matches: validMatches });
-    if (result.error) { if (result.error === 'no_credits') { tg.showAlert(`Crédits insuffisants. Ce combiné coûte ${result.credits_needed} crédits. Ton solde : ${result.credits_available}`); goTo('boutique'); return; }
-
+    if (result.error) {
+      if (result.error === 'no_credits') {
+        tg.showAlert(`Crédits insuffisants.\nCe combiné coûte ${result.credits_needed} crédits.\nTon solde : ${result.credits_available} crédit(s).`);
+        goTo('boutique');
+        return;
+      }
+      throw new Error(result.error);
+    }
     document.getElementById('combo-result-container').innerHTML = `<div class="combo-result">${result.result}</div>`;
     userData = await api.get('/api/me'); updateHeader(); loadComboHistory();
-
-    // Reset
     comboMatches = [{ match: '', sport: 'football', odds: '' }, { match: '', sport: 'football', odds: '' }];
     renderComboMatches();
   } catch(e) { tg.showAlert('Erreur lors de l\'analyse. Réessaie.'); }
@@ -458,7 +467,7 @@ async function loadComboHistory() {
   const el = document.getElementById('combo-history');
   const combos = (analyses || []).filter(a => a.sport === 'combiné');
   if (!combos.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><p>Aucun combiné analysé encore</p></div>'; return; }
-  el.innerHTML = combos.slice(0,3).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Combiné'}</div><div class="bet-sport">${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge s-won">1 crédit</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,200)}${a.result?.length>200?'...':''}</p></div>`).join('');
+  el.innerHTML = combos.slice(0,3).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Combiné'}</div><div class="bet-sport">${new Date(a.created_at).toLocaleDateString('fr-FR')} · ${a.credits_used} crédits</div></div><span class="status-badge s-won">${a.credits_used} crédits</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,200)}${a.result?.length>200?'...':''}</p></div>`).join('');
 }
 
 // ── PARIS ────────────────────────────────────────────────────
