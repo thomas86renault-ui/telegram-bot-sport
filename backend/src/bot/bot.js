@@ -9,9 +9,17 @@ const logger = require('../config/logger');
 // ══════════════════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════════════════
-const WEBAPP_URL = process.env.TELEGRAM_WEBAPP_URL || 'https://telegram-bot-sport.thomas86renault.workers.dev/';
 const ADMIN_IDS = (process.env.ADMIN_TELEGRAM_IDS || '').split(',').map(id => parseInt(id.trim())).filter(Boolean);
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+// ─── URL dynamique du tunnel (mise à jour depuis index.js) ───
+let WEBAPP_URL = process.env.TELEGRAM_WEBAPP_URL || '';
+
+// Appelé depuis index.js une fois le tunnel démarré
+const setWebappUrl = (url) => {
+  WEBAPP_URL = url;
+  logger.info(`[Bot] WEBAPP_URL mis à jour → ${url}`);
+};
 
 // ─── Tarification combinés ────────────────────────────────────
 const getComboCredits = (n) => n <= 3 ? 2 : n <= 5 ? 3 : n <= 7 ? 5 : 6;
@@ -485,4 +493,4 @@ ${matches.map((m, i) => `🔹 *${i+1}. ${m}*\n• Infos: [blessures/RAS] • For
 };
 
 logger.info('✅ Bot Telegram démarré');
-module.exports = bot;
+module.exports = { bot, setWebappUrl };
