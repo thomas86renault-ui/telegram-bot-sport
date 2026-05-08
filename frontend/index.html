@@ -282,7 +282,7 @@
 </div>
 
 <script>
-const tg = window.Telegram?.WebApp || { initData: '', expand: ()=>{}, ready: ()=>{}, showAlert: alert, openLink: u => window.open(u, '_blank') };
+const tg = window.Telegram?.WebApp || { initData: 'dev', expand: ()=>{}, ready: ()=>{}, showAlert: alert, openLink: u => window.open(u, '_blank') };
 tg.expand(); tg.ready();
 
 // ✅ URL corrigée — pointe vers le Worker principal qui lit le KV
