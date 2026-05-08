@@ -1,3 +1,4 @@
+cat << 'EOF' > /mnt/user-data/outputs/bot.js
 const TelegramBot = require('node-telegram-bot-api');
 const Anthropic = require('@anthropic-ai/sdk');
 const { findOrCreateUser, checkAnalysisPermission, consumeCredit, getUserByTelegramId } = require('../services/userService');
@@ -31,7 +32,7 @@ const detectSport = (text) => {
   return 'football';
 };
 
-// ─── Envoi message long — CORRIGÉ ────────────────────────────
+// ─── Envoi message long ───────────────────────────────────────
 const sendLong = async (chatId, text, options = {}) => {
   const MAX = 3900;
   if (text.length <= MAX) {
@@ -46,7 +47,6 @@ const sendLong = async (chatId, text, options = {}) => {
     const candidate = current ? current + '\n' + line : line;
     if (candidate.length > MAX) {
       if (current) parts.push(current.trim());
-      // Si une seule ligne dépasse MAX, on la coupe en morceaux
       if (line.length > MAX) {
         let remaining = line;
         while (remaining.length > MAX) {
@@ -68,7 +68,6 @@ const sendLong = async (chatId, text, options = {}) => {
     try {
       await bot.sendMessage(chatId, parts[i], isLast ? options : { parse_mode: 'Markdown' });
     } catch (e) {
-      // Si Markdown échoue (mauvais formatage), envoie sans parse_mode
       await bot.sendMessage(chatId, parts[i], isLast ? { ...options, parse_mode: undefined } : {});
     }
     if (!isLast) await new Promise(r => setTimeout(r, 300));
@@ -94,7 +93,7 @@ bot.onText(/\/start/, async (msg) => {
       parse_mode: 'Markdown',
       reply_markup: { inline_keyboard: [
         [{ text: '⚽ Analyser un match', callback_data: 'analyse' }, { text: '🎯 Faire un combiné', callback_data: 'combine' }],
-        [{ text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }, { text: '💰 Boutique', callback_data: 'shop' }],
+        [{ text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }, { text: '💰 Boutique', callback_data: 'shop' }],
         [{ text: '❓ Aide', callback_data: 'help' }, { text: '💬 Support', url: 'https://t.me/stckb2' }],
       ]}
     }
@@ -125,7 +124,7 @@ bot.onText(/\/help/, async (msg) => {
     `*Sports :* ⚽ Football · 🎾 Tennis · 🏀 Basket · 🏉 Rugby · 🏈 NFL · ⚾ Baseball · 🏒 Hockey · 🥊 MMA · 🏎 F1\n\n` +
     `*Tarif combinés :* 2-3 matchs=2cr · 4-5=3cr · 6-7=5cr · 8-10=6cr`,
     { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [[
-      { text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
+      { text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
     ]]}}
   );
 });
@@ -167,7 +166,6 @@ bot.on('callback_query', async (cb) => {
   const from = cb.from;
   await bot.answerCallbackQuery(cb.id);
 
-  // ── Refresh forcé depuis cache ────────────────────────────
   if (cb.data.startsWith('refresh_')) {
     const raw = cb.data.replace('refresh_', '');
     const sepIdx = raw.lastIndexOf('__');
@@ -177,7 +175,6 @@ bot.on('callback_query', async (cb) => {
     return;
   }
 
-  // ── Analyse fraîche depuis alerte pré-match ───────────────
   if (cb.data.startsWith('analyse_fresh_')) {
     await promptForMatch(chatId, from);
     return;
@@ -249,7 +246,7 @@ bot.on('callback_query', async (cb) => {
       await bot.sendMessage(chatId,
         `/analyse — Match simple\n/combine — Combiné\n/credits — Crédits`,
         { reply_markup: { inline_keyboard: [[
-          { text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
+          { text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
         ]]}}
       );
       break;
@@ -274,7 +271,6 @@ const promptForMatch = async (chatId, telegramUser) => {
   pendingAnalysis.set(telegramUser.id, { step: 'match', isFree, user });
 };
 
-// ─── Analyse simple ───────────────────────────────────────────
 const runSingleAnalysis = async (msg, state) => {
   const sport = detectSport(msg.text);
   const isPremium = state.user.subscription_status === 'active';
@@ -295,29 +291,19 @@ const runSingleAnalysis = async (msg, state) => {
 
     const baseButtons = [
       [{ text: '⚽ Nouvelle analyse', callback_data: 'analyse' }, { text: '🎯 Combiné', callback_data: 'combine' }],
-      [{ text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }],
+      [{ text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }],
     ];
 
     if (fromCache) {
       header += cacheBadge + '\n\n';
-
       const freshUser = await getUserByTelegramId(msg.from.id);
       const hasCredits = freshUser && freshUser.credits > 0;
       const safeMatch = msg.text.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30);
       const refreshKey = `refresh_${safeMatch}__${sport}`;
-
       if (hasCredits) {
-        // ✅ A des crédits → bouton direct, pas de Stripe
-        baseButtons.unshift([{
-          text: `🔄 Refresh — 1 crédit (solde: ${freshUser.credits})`,
-          callback_data: refreshKey
-        }]);
+        baseButtons.unshift([{ text: `🔄 Refresh — 1 crédit (solde: ${freshUser.credits})`, callback_data: refreshKey }]);
       } else {
-        // ❌ Pas de crédits → boutique
-        baseButtons.unshift([{
-          text: '🔄 Refresh — acheter des crédits',
-          callback_data: 'shop'
-        }]);
+        baseButtons.unshift([{ text: '🔄 Refresh — acheter des crédits', callback_data: 'shop' }]);
       }
     }
 
@@ -334,7 +320,6 @@ const runSingleAnalysis = async (msg, state) => {
   }
 };
 
-// ─── Refresh forcé (bypass cache) ────────────────────────────
 const runRefreshAnalysis = async (chatId, telegramUser, matchName, sport) => {
   const { canAnalyze, isFree, user } = await checkAnalysisPermission(telegramUser.id);
   if (!canAnalyze) { await sendNoCreditsMessage(telegramUser.id); return; }
@@ -375,7 +360,7 @@ const runRefreshAnalysis = async (chatId, telegramUser, matchName, sport) => {
 
     const baseButtons = [
       [{ text: '⚽ Nouvelle analyse', callback_data: 'analyse' }, { text: '🎯 Combiné', callback_data: 'combine' }],
-      [{ text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }],
+      [{ text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }],
     ];
 
     if (freshUser && freshUser.credits > 0) {
@@ -414,7 +399,6 @@ const promptForCombo = async (chatId, telegramUser) => {
   pendingAnalysis.set(telegramUser.id, { step: 'combo', user });
 };
 
-// ─── Message handler ──────────────────────────────────────────
 bot.on('message', async (msg) => {
   if (!msg.text || msg.text.startsWith('/')) return;
   const state = pendingAnalysis.get(msg.from.id);
@@ -424,7 +408,6 @@ bot.on('message', async (msg) => {
   else if (state.step === 'combo') await runComboAnalysis(msg, state);
 });
 
-// ─── Analyse combiné ──────────────────────────────────────────
 const runComboAnalysis = async (msg, state) => {
   const matches = msg.text.split('\n').map(m => m.trim()).filter(m => m.length > 3).slice(0, 10);
   if (matches.length < 2) {
@@ -452,7 +435,6 @@ const runComboAnalysis = async (msg, state) => {
   try {
     const date = new Date().toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long' });
 
-    // Prompt combiné optimisé
     const prompt = `Expert paris combinés. ${date}. ${matches.length} matchs:
 ${matches.map((m, i) => `${i + 1}. ${m}`).join('\n')}
 
@@ -477,7 +459,7 @@ ${matches.map((m, i) => `🔹 *${i+1}. ${m}*
     const result = response.content.filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
     if (!result) throw new Error('Réponse vide');
 
-    const saved = await query(
+    await query(
       `INSERT INTO analyses (user_id, sport, match_name, prompt_sent, result, credits_used)
        VALUES ($1,'combiné',$2,$3,$4,$5) RETURNING id`,
       [user.id, `Combiné ${matches.length} matchs`, prompt, result, creditsNeeded]
@@ -493,7 +475,7 @@ ${matches.map((m, i) => `🔹 *${i+1}. ${m}*
       `🎯 *Combiné ${matches.length} matchs* — ${creditsNeeded} crédits débités\n\n${result}`,
       { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [
         [{ text: '⚽ Analyse simple', callback_data: 'analyse' }, { text: '🎯 Nouveau combiné', callback_data: 'combine' }],
-        [{ text: '📊 Mon dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }],
+        [{ text: '📊 Mon dashboard', web_app: { url: WEBAPP_URL } }],
       ]}}
     );
   } catch (err) {
@@ -507,3 +489,5 @@ ${matches.map((m, i) => `🔹 *${i+1}. ${m}*
 
 logger.info('✅ Bot Telegram démarré');
 module.exports = bot;
+EOF
+echo "done"
