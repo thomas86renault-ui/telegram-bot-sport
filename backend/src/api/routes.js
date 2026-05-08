@@ -13,6 +13,14 @@ const logger = require('../config/logger');
 const app = express();
 app.set('trust proxy', 1);
 
+// ─── Tarification combinés ────────────────────────────────────
+const getComboCredits = (matchCount) => {
+  if (matchCount <= 3) return 2;
+  if (matchCount <= 5) return 3;
+  if (matchCount <= 7) return 5;
+  return 6;
+};
+
 // ─── Stripe webhook ───────────────────────────────────────────
 app.post('/webhook/stripe',
   express.raw({ type: 'application/json' }),
@@ -139,16 +147,11 @@ app.patch('/api/bets/:id', verifyTelegramWebApp, async (req, res) => {
     }
 
     const result = await query(
-      `UPDATE bets SET status = $1
-       WHERE id = $2 AND user_id = $3 AND status = 'pending'
-       RETURNING *`,
+      `UPDATE bets SET status = $1 WHERE id = $2 AND user_id = $3 AND status = 'pending' RETURNING *`,
       [status, req.params.id, user.id]
     );
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Pari non trouvé ou déjà résolu' });
-    }
-
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Pari non trouvé ou déjà résolu' });
     res.json(result.rows[0]);
   } catch (err) {
     logger.error('PATCH /api/bets:', err);
@@ -164,9 +167,7 @@ app.patch('/api/bets/:id/notify', verifyTelegramWebApp, async (req, res) => {
 
     const { notify } = req.body;
     const result = await query(
-      `UPDATE bets SET notify_result = $1
-       WHERE id = $2 AND user_id = $3 AND status = 'pending'
-       RETURNING *`,
+      `UPDATE bets SET notify_result = $1 WHERE id = $2 AND user_id = $3 AND status = 'pending' RETURNING *`,
       [notify, req.params.id, user.id]
     );
 
@@ -254,12 +255,16 @@ app.post('/api/analyse-combo', verifyTelegramWebApp, async (req, res) => {
     const user = await getUserByTelegramId(req.telegramUser.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    const { canAnalyze, isFree } = await checkAnalysisPermission(req.telegramUser.id);
-    if (!canAnalyze) return res.json({ error: 'no_credits' });
-
     const { matches } = req.body;
     if (!matches || matches.length < 2) {
       return res.status(400).json({ error: 'Minimum 2 matchs' });
+    }
+
+    const creditsNeeded = getComboCredits(matches.length);
+
+    // Vérifie les crédits
+    if (user.credits < creditsNeeded) {
+      return res.json({ error: 'no_credits', credits_needed: creditsNeeded, credits_available: user.credits });
     }
 
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -288,9 +293,7 @@ Pour chaque match :
 Conclusion :
 • Probabilité globale estimée
 • Mise recommandée (% bankroll)
-• Verdict : ✅ Combiné jouable / ⚠️ Risqué / ❌ Déconseillé
-
-Sois concis et factuel. Format clair avec emojis.`;
+• Verdict : ✅ Combiné jouable / ⚠️ Risqué / ❌ Déconseillé`;
 
     const message = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
@@ -301,13 +304,19 @@ Sois concis et factuel. Format clair avec emojis.`;
     const result = message.content[0].text;
 
     const saved = await query(
-      `INSERT INTO analyses (user_id, sport, match_name, prompt_sent, result, credits_used, was_free)
-       VALUES ($1, 'combiné', $2, $3, $4, 1, $5) RETURNING id`,
-      [user.id, `Combiné ${matches.length} matchs`, prompt, result, isFree]
+      `INSERT INTO analyses (user_id, sport, match_name, prompt_sent, result, credits_used)
+       VALUES ($1, 'combiné', $2, $3, $4, $5) RETURNING id`,
+      [user.id, `Combiné ${matches.length} matchs`, prompt, result, creditsNeeded]
     );
 
-    await consumeCredit(user.id, isFree, saved.rows[0].id);
-    res.json({ result, was_free: isFree });
+    // Débit des crédits
+    await query('UPDATE users SET credits = credits - $1 WHERE id = $2', [creditsNeeded, user.id]);
+    await query(
+      `INSERT INTO credit_transactions (user_id, amount, type, description) VALUES ($1, $2, 'analysis', $3)`,
+      [user.id, -creditsNeeded, `Combiné ${matches.length} matchs`]
+    );
+
+    res.json({ result, credits_used: creditsNeeded });
   } catch (err) {
     logger.error('POST /api/analyse-combo:', err);
     res.status(500).json({ error: 'Server error' });
