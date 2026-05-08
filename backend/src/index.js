@@ -1,36 +1,9 @@
 require('dotenv').config();
-// ─── Cloudflare Tunnel (HTTPS automatique) ────────────────────
-const { execSync, spawn } = require('child_process');
-try {
-  execSync('which cloudflared', { stdio: 'ignore' });
-} catch {
-  execSync('curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /home/container/cloudflared && chmod +x /home/container/cloudflared', { stdio: 'inherit' });
-}
-const tunnel = spawn('/home/container/cloudflared', ['tunnel', '--url', 'http://localhost:3000'], { stdio: 'pipe' });
-tunnel.stderr.on('data', async (data) => {
-  const str = data.toString();
-  const match = str.match(/https:\/\/[a-z0-9\-]+\.trycloudflare\.com/);
-  if (match) {
-    const tunnelUrl = match[0];
-    logger.info(`Tunnel HTTPS: ${tunnelUrl}`);
-    // Met à jour automatiquement la variable BACKEND_URL du Worker Cloudflare
-    try {
-      await fetch(`https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/workers/scripts/parissportif-api/secrets`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${process.env.CF_API_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: 'BACKEND_URL', text: tunnelUrl, type: 'secret_text' }),
-      });
-      logger.info(`Worker mis à jour avec: ${tunnelUrl}`);
-    } catch(e) {
-      logger.warn('Impossible de mettre à jour le Worker:', e.message);
-    }
-  }
-});
 const { pool } = require('./config/database');
 const logger = require('./config/logger');
+const fs = require('fs');
+const https = require('https');
+const { spawn } = require('child_process');
 
 const REQUIRED_ENV = [
   'TELEGRAM_BOT_TOKEN',
@@ -38,7 +11,6 @@ const REQUIRED_ENV = [
   'ANTHROPIC_API_KEY',
   'TELEGRAM_WEBAPP_URL',
 ];
-
 for (const key of REQUIRED_ENV) {
   if (!process.env[key]) {
     logger.error(`Variable d'environnement manquante: ${key}`);
@@ -46,6 +18,69 @@ for (const key of REQUIRED_ENV) {
   }
 }
 
+// ─── Tunnel cloudflared auto ──────────────────────────────────
+const CF_PATH = '/tmp/cloudflared';
+
+function startTunnel(bin) {
+  logger.info('[Tunnel] Démarrage du tunnel...');
+  const proc = spawn(bin, ['tunnel', '--url', 'http://localhost:3000'], {
+    detached: true,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+
+  proc.stderr.on('data', (data) => {
+    const line = data.toString();
+    const match = line.match(/https:\/\/[a-z0-9\-]+\.trycloudflare\.com/);
+    if (match) {
+      logger.info(`🌐 TUNNEL URL → ${match[0]}`);
+      logger.info(`👉 Copie cette URL dans BACKEND_URL sur Cloudflare Workers`);
+    }
+  });
+
+  proc.on('error', (err) => {
+    logger.warn('[Tunnel] Erreur: ' + err.message);
+  });
+
+  proc.unref();
+}
+
+function downloadAndStartTunnel() {
+  if (fs.existsSync(CF_PATH)) {
+    logger.info('[Tunnel] cloudflared déjà présent, démarrage...');
+    startTunnel(CF_PATH);
+    return;
+  }
+
+  logger.info('[Tunnel] Téléchargement de cloudflared...');
+  const file = fs.createWriteStream(CF_PATH);
+
+  const download = (url, redirectCount = 0) => {
+    if (redirectCount > 5) {
+      logger.warn('[Tunnel] Trop de redirections, abandon.');
+      return;
+    }
+    https.get(url, { headers: { 'User-Agent': 'node' } }, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        download(res.headers.location, redirectCount + 1);
+        return;
+      }
+      res.pipe(file);
+      file.on('finish', () => {
+        file.close();
+        fs.chmodSync(CF_PATH, '755');
+        logger.info('[Tunnel] cloudflared téléchargé ✅');
+        startTunnel(CF_PATH);
+      });
+    }).on('error', (err) => {
+      logger.warn('[Tunnel] Téléchargement échoué: ' + err.message);
+      fs.unlink(CF_PATH, () => {});
+    });
+  };
+
+  download('https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64');
+}
+
+// ─── Démarrage principal ──────────────────────────────────────
 (async () => {
   try {
     await pool.query('SELECT 1');
@@ -63,11 +98,17 @@ for (const key of REQUIRED_ENV) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     logger.info(`API démarrée sur le port ${PORT}`);
+    // Lance le tunnel après que l'API soit prête
+    downloadAndStartTunnel();
   });
 
-  // Cron jobs — on passe le bot pour les broadcasts
+  // Cron jobs
   const { setBot } = require('./jobs/scheduler');
   setBot(bot);
+
+  // Breaking news + alertes pré-match
+  const { startBreakingNewsJob } = require('./services/analysisCacheService');
+  startBreakingNewsJob(bot);
 
   logger.info('🚀 Bot Sport IA démarré avec succès');
 })();
