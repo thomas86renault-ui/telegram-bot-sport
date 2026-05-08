@@ -4,6 +4,7 @@ const { query } = require('../config/database');
 const { runAnalysis } = require('../services/analysisService');
 const { checkPendingResults, setBot: setCheckerBot } = require('../services/resultsChecker');
 const logger = require('../config/logger');
+const { pool } = require('../config/database');
 
 let bot = null;
 
@@ -16,9 +17,10 @@ const setBot = (botInstance) => {
 cron.schedule('0 * * * *', async () => {
   logger.info('CRON: Vérification résultats paris...');
   try {
+    await pool.query('SELECT 1'); // réveille Neon
     await checkPendingResults();
   } catch (err) {
-    logger.error('CRON results error:', err);
+    logger.error('CRON results error:', err.message);
   }
 });
 
