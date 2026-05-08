@@ -94,7 +94,7 @@ bot.onText(/\/start/, async (msg) => {
       parse_mode: 'Markdown',
       reply_markup: { inline_keyboard: [
         [{ text: '⚽ Analyser un match', callback_data: 'analyse' }, { text: '🎯 Faire un combiné', callback_data: 'combine' }],
-        [{ text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }, { text: '💰 Boutique', callback_data: 'shop' }],
+        [{ text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }, { text: '💰 Boutique', callback_data: 'shop' }],
         [{ text: '❓ Aide', callback_data: 'help' }, { text: '💬 Support', url: 'https://t.me/stckb2' }],
       ]}
     }
@@ -125,7 +125,7 @@ bot.onText(/\/help/, async (msg) => {
     `*Sports :* ⚽ Football · 🎾 Tennis · 🏀 Basket · 🏉 Rugby · 🏈 NFL · ⚾ Baseball · 🏒 Hockey · 🥊 MMA · 🏎 F1\n\n` +
     `*Tarif combinés :* 2-3 matchs=2cr · 4-5=3cr · 6-7=5cr · 8-10=6cr`,
     { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [[
-      { text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
+      { text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
     ]]}}
   );
 });
@@ -249,7 +249,7 @@ bot.on('callback_query', async (cb) => {
       await bot.sendMessage(chatId,
         `/analyse — Match simple\n/combine — Combiné\n/credits — Crédits`,
         { reply_markup: { inline_keyboard: [[
-          { text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
+          { text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }, { text: '💬 Support', url: 'https://t.me/stckb2' }
         ]]}}
       );
       break;
@@ -295,7 +295,7 @@ const runSingleAnalysis = async (msg, state) => {
 
     const baseButtons = [
       [{ text: '⚽ Nouvelle analyse', callback_data: 'analyse' }, { text: '🎯 Combiné', callback_data: 'combine' }],
-      [{ text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }],
+      [{ text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }],
     ];
 
     if (fromCache) {
@@ -375,7 +375,7 @@ const runRefreshAnalysis = async (chatId, telegramUser, matchName, sport) => {
 
     const baseButtons = [
       [{ text: '⚽ Nouvelle analyse', callback_data: 'analyse' }, { text: '🎯 Combiné', callback_data: 'combine' }],
-      [{ text: '📊 Dashboard', web_app: { url: WEBAPP_URL } }],
+      [{ text: '📊 Dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }],
     ];
 
     if (freshUser && freshUser.credits > 0) {
@@ -493,7 +493,7 @@ ${matches.map((m, i) => `🔹 *${i+1}. ${m}*
       `🎯 *Combiné ${matches.length} matchs* — ${creditsNeeded} crédits débités\n\n${result}`,
       { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [
         [{ text: '⚽ Analyse simple', callback_data: 'analyse' }, { text: '🎯 Nouveau combiné', callback_data: 'combine' }],
-        [{ text: '📊 Mon dashboard', web_app: { url: WEBAPP_URL } }],
+        [{ text: '📊 Mon dashboard', web_app: { url: 'https://telegram-bot-sport.thomas86renault.workers.dev' } }],
       ]}}
     );
   } catch (err) {
