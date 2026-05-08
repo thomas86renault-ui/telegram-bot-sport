@@ -11,4 +11,10 @@
   "compatibility_flags": [
     "nodejs_compat"
   ]
+"kv_namespaces": [
+  {
+    "binding": "CONFIG",
+    "id": "3db87e61b21c42e082596880c0047fbe"
+  }
+]
 }
