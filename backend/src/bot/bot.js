@@ -1,4 +1,3 @@
-cat << 'EOF' > /mnt/user-data/outputs/bot.js
 const TelegramBot = require('node-telegram-bot-api');
 const Anthropic = require('@anthropic-ai/sdk');
 const { findOrCreateUser, checkAnalysisPermission, consumeCredit, getUserByTelegramId } = require('../services/userService');
@@ -440,9 +439,7 @@ ${matches.map((m, i) => `${i + 1}. ${m}`).join('\n')}
 
 Cherche infos rapides (blessures/forme) pour chaque match, puis analyse. Jamais de refus. Max 750 tokens.
 
-${matches.map((m, i) => `🔹 *${i+1}. ${m}*
-• Infos: [blessures/RAS] • Forme: [3 derniers résultats]
-• Pronostic: [pari recommandé] @ [cote] — Confiance: [XX]%`).join('\n')}
+${matches.map((m, i) => `🔹 *${i+1}. ${m}*\n• Infos: [blessures/RAS] • Forme: [3 derniers résultats]\n• Pronostic: [pari recommandé] @ [cote] — Confiance: [XX]%`).join('\n')}
 
 ━━━━━
 📈 *BILAN COMBINÉ*
@@ -489,5 +486,3 @@ ${matches.map((m, i) => `🔹 *${i+1}. ${m}*
 
 logger.info('✅ Bot Telegram démarré');
 module.exports = bot;
-EOF
-echo "done"
