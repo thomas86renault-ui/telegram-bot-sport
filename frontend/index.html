@@ -84,6 +84,7 @@
     .plan-features { font-size: 12px; color: var(--muted); line-height: 1.8; }
     .plan-features li { list-style: none; }
     .plan-features li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+    .plan-per-credit { font-size: 10px; color: var(--muted); margin-top: 4px; opacity: .7; }
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: flex-end; }
     .modal-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 24px 20px 32px; width: 100%; border-top: 1px solid var(--border2); }
     .modal-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
@@ -179,21 +180,16 @@
     <h3>🎯 Analyse de combiné</h3>
     <p>Ajoute tes matchs un par un. L'IA analysera chaque match et te donnera un verdict global sur ton combiné.</p>
   </div>
-
   <div class="info-banner" style="background:rgba(255,176,32,.08);border-color:rgba(255,176,32,.2);color:var(--gold)">
     💳 <b>Tarif :</b> 2-3 matchs = 2 crédits · 4-5 = 3 crédits · 6-7 = 5 crédits · 8-10 = 6 crédits
   </div>
-
   <div id="combo-matches-list"></div>
   <button class="btn-add-match" onclick="addComboMatch()">+ Ajouter un match</button>
-
   <div class="input-group">
     <label class="input-label">Mise totale envisagée (€)</label>
     <input class="input-field" id="c-stake" type="number" step="0.01" placeholder="10" oninput="renderComboMatches()">
   </div>
-
   <div id="combo-price-display" style="margin-bottom:12px"></div>
-
   <button class="btn btn-gold" id="btn-combo" onclick="launchCombo()">🎯 Analyser le combiné</button>
   <div id="combo-result-container"></div>
   <div class="section-title">Derniers combinés</div>
@@ -202,7 +198,7 @@
 
 <!-- PARIS -->
 <div id="page-paris" class="page">
-  <div class="info-banner">💡 Saisis tes paris ici pour suivre ta bankroll. Les résultats peuvent être mis à jour manuellement ou automatiquement via les notifications.</div>
+  <div class="info-banner">💡 Saisis tes paris ici pour suivre ta bankroll.</div>
   <button class="btn btn-primary mb-14" onclick="openAddBet()">+ Saisir un pari</button>
   <div id="bets-list"></div>
 </div>
@@ -210,19 +206,77 @@
 <!-- BOUTIQUE -->
 <div id="page-boutique" class="page">
   <div class="section-title" style="margin-top:0">Crédits à la carte</div>
-  <div class="plan-card" onclick="openPayment('credits')">
-    <div class="plan-header"><div class="plan-name">🎯 Pack 10 crédits</div><div class="plan-price">3€</div></div>
-    <ul class="plan-features"><li>10 analyses IA</li><li>Valable sans limite de temps</li><li>Paiement unique</li></ul>
+
+  <!-- Pack S -->
+  <div class="plan-card" onclick="openPayment('pack_s')">
+    <div class="plan-header">
+      <div class="plan-name">🟢 Pack S</div>
+      <div>
+        <div class="plan-price">4,99€</div>
+        <div class="plan-per-credit">≈ 1,00€ / crédit</div>
+      </div>
+    </div>
+    <ul class="plan-features">
+      <li>5 analyses IA</li>
+      <li>Valable sans limite de temps</li>
+      <li>Paiement unique</li>
+    </ul>
   </div>
+
+  <!-- Pack M -->
+  <div class="plan-card featured" onclick="openPayment('pack_m')">
+    <div class="plan-badge">MEILLEUR RAPPORT</div>
+    <div class="plan-header">
+      <div class="plan-name">🔵 Pack M</div>
+      <div>
+        <div class="plan-price">9,99€</div>
+        <div class="plan-per-credit">≈ 0,67€ / crédit</div>
+      </div>
+    </div>
+    <ul class="plan-features">
+      <li>15 analyses IA</li>
+      <li>Valable sans limite de temps</li>
+      <li>Paiement unique</li>
+      <li>-33% vs Pack S</li>
+    </ul>
+  </div>
+
   <div class="section-title">Abonnements</div>
+
+  <!-- Mensuel -->
   <div class="plan-card" onclick="openPayment('monthly')">
-    <div class="plan-header"><div class="plan-name">📅 Mensuel</div><div class="plan-price">14.99€ <span>/mois</span></div></div>
-    <ul class="plan-features"><li>60 crédits par mois</li><li>Analyse automatique chaque soir</li><li>1 analyse gratuite par semaine</li><li>Notifications résultats</li></ul>
+    <div class="plan-header">
+      <div class="plan-name">📅 Mensuel</div>
+      <div>
+        <div class="plan-price">24,99€ <span>/mois</span></div>
+        <div class="plan-per-credit">≈ 0,42€ / crédit</div>
+      </div>
+    </div>
+    <ul class="plan-features">
+      <li>60 crédits par mois</li>
+      <li>Analyse automatique chaque soir</li>
+      <li>1 analyse gratuite par semaine</li>
+      <li>Notifications résultats</li>
+    </ul>
   </div>
-  <div class="plan-card featured" onclick="openPayment('yearly')">
-    <div class="plan-badge">MEILLEURE OFFRE</div>
-    <div class="plan-header"><div class="plan-name">🔥 Annuel</div><div class="plan-price">99€ <span>/an</span></div></div>
-    <ul class="plan-features"><li>80 crédits par mois</li><li>Analyse automatique chaque soir</li><li>1 analyse gratuite par semaine</li><li>Notifications résultats</li><li>Économise 80€ vs mensuel</li></ul>
+
+  <!-- Annuel -->
+  <div class="plan-card" onclick="openPayment('yearly')">
+    <div class="plan-badge">ÉCONOMIES MAX</div>
+    <div class="plan-header">
+      <div class="plan-name">🔥 Annuel</div>
+      <div>
+        <div class="plan-price">149€ <span>/an</span></div>
+        <div class="plan-per-credit">≈ 0,21€ / crédit</div>
+      </div>
+    </div>
+    <ul class="plan-features">
+      <li>60 crédits par mois (720/an)</li>
+      <li>Analyse automatique chaque soir</li>
+      <li>1 analyse gratuite par semaine</li>
+      <li>Notifications résultats</li>
+      <li>Économise 151€ vs mensuel</li>
+    </ul>
   </div>
 </div>
 
@@ -285,23 +339,44 @@
 const tg = window.Telegram?.WebApp || { initData: 'dev', expand: ()=>{}, ready: ()=>{}, showAlert: alert, openLink: u => window.open(u, '_blank') };
 tg.expand(); tg.ready();
 
-// ✅ URL corrigée — pointe vers le Worker principal qui lit le KV
 const API_BASE = 'https://parissportif-api.thomas86renault.workers.dev';
 let userData = null, betsData = [], chartInstance = null, currentPaymentType = null;
 let comboMatches = [{ match: '', sport: 'football', odds: '' }, { match: '', sport: 'football', odds: '' }];
 
+// ─── Nouveaux liens Stripe (price_id → checkout) ───────────────────────────────
+// Les liens /payment_link/ sont des Payment Links Stripe statiques.
+// Remplacez par vos vrais payment links ou utilisez l'API via le backend.
 const PAYMENT_LINKS = {
-  credits: { stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005', paypal: 'https://www.paypal.me/stckb2/3',     crypto: 'https://nowpayments.io/payment/?iid=6103966652' },
-  monthly: { stripe: 'https://buy.stripe.com/14A14fgMo0KF1LH1Qogw007', paypal: 'https://www.paypal.me/stckb2/14.99', crypto: 'https://nowpayments.io/payment/?iid=6410825735' },
-  yearly:  { stripe: 'https://buy.stripe.com/fZubIT53G2SNcql8eMgw005', paypal: 'https://www.paypal.me/stckb2/99',    crypto: 'https://nowpayments.io/payment/?iid=4511571204' },
+  pack_s:  {
+    stripe: 'https://buy.stripe.com/REMPLACER_PACK_S',   // TODO: créer payment link Stripe pour price_1TV0BS0xcrFO1iNq7vykMNOM
+    paypal: 'https://www.paypal.me/stckb2/4.99',
+    crypto: 'https://nowpayments.io/payment/?iid=6103966652'
+  },
+  pack_m:  {
+    stripe: 'https://buy.stripe.com/REMPLACER_PACK_M',   // TODO: créer payment link Stripe pour price_1TV0C50xcrFO1iNqj2qly886
+    paypal: 'https://www.paypal.me/stckb2/9.99',
+    crypto: 'https://nowpayments.io/payment/?iid=6103966652'
+  },
+  monthly: {
+    stripe: 'https://buy.stripe.com/REMPLACER_MENSUEL',  // TODO: créer payment link Stripe pour price_1TV0Cs0xcrFO1iNqWzV01FA1
+    paypal: 'https://www.paypal.me/stckb2/24.99',
+    crypto: 'https://nowpayments.io/payment/?iid=6410825735'
+  },
+  yearly:  {
+    stripe: 'https://buy.stripe.com/REMPLACER_ANNUEL',   // TODO: créer payment link Stripe pour price_1TV0DO0xcrFO1iNqqDBomO9B
+    paypal: 'https://www.paypal.me/stckb2/149',
+    crypto: 'https://nowpayments.io/payment/?iid=4511571204'
+  },
 };
-const PAYMENT_LABELS = {
-  credits: { title: 'Pack 10 crédits', sub: '3€ — paiement unique' },
-  monthly: { title: 'Abonnement mensuel', sub: '14.99€/mois — 60 crédits' },
-  yearly:  { title: 'Abonnement annuel',  sub: '99€/an — 80 crédits/mois' },
-};
-const SPORTS = { football: '⚽', tennis: '🎾', basketball: '🏀', rugby: '🏉', american_football: '🏈', baseball: '⚾', hockey: '🏒' };
 
+const PAYMENT_LABELS = {
+  pack_s:  { title: '🟢 Pack S — 5 crédits',         sub: '4,99€ — paiement unique' },
+  pack_m:  { title: '🔵 Pack M — 15 crédits',        sub: '9,99€ — paiement unique' },
+  monthly: { title: '📅 Abonnement mensuel',          sub: '24,99€/mois — 60 crédits' },
+  yearly:  { title: '🔥 Abonnement annuel',           sub: '149€/an — 60 crédits/mois' },
+};
+
+const SPORTS = { football: '⚽', tennis: '🎾', basketball: '🏀', rugby: '🏉', american_football: '🏈', baseball: '⚾', hockey: '🏒' };
 const getComboCredits = (n) => n <= 3 ? 2 : n <= 5 ? 3 : n <= 7 ? 5 : 6;
 
 const headers = () => ({ 'Content-Type': 'application/json', 'x-telegram-init-data': tg.initData || 'dev' });
