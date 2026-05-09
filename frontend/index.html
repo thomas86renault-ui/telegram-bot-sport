@@ -112,7 +112,7 @@
 
 <div class="header">
   <div class="header-logo">⚽ Paris IA</div>
-  <div class="credits-pill"><span id="hdr-credits">—</span> crédits <span id="hdr-free"></span></div>
+  <div class="credits-pill"><span id="hdr-credits">—</span> crédits</div>
 </div>
 
 <div class="nav">
@@ -149,7 +149,6 @@
 <div id="page-analyse" class="page">
   <div class="info-banner">💡 Toutes tes analyses sont sauvegardées ici. Tu peux aussi lancer une analyse via <b>/analyse</b> sur Telegram.</div>
   <div class="analyse-launch">
-    <div id="free-badge-container"></div>
     <h3>Analyse IA d'un match</h3>
     <p>Entre le nom du match, l'IA consulte les stats et les cotes en temps réel pour te donner un pronostic argumenté.</p>
   </div>
@@ -255,7 +254,6 @@
     <ul class="plan-features">
       <li>60 crédits par mois</li>
       <li>Analyse automatique chaque soir</li>
-      <li>1 analyse gratuite par semaine</li>
       <li>Notifications résultats</li>
     </ul>
   </div>
@@ -273,7 +271,6 @@
     <ul class="plan-features">
       <li>60 crédits par mois (720/an)</li>
       <li>Analyse automatique chaque soir</li>
-      <li>1 analyse gratuite par semaine</li>
       <li>Notifications résultats</li>
       <li>Économise 151€ vs mensuel</li>
     </ul>
@@ -396,7 +393,6 @@ async function init() {
 
 function updateHeader() {
   document.getElementById('hdr-credits').textContent = userData.credits;
-  document.getElementById('hdr-free').textContent = userData.free_analysis_used ? '' : '🎁';
 }
 
 function goTo(page) {
@@ -423,9 +419,6 @@ async function renderDashboard() {
     document.getElementById('sub-plan-name').textContent = 'Abonnement Premium actif';
     document.getElementById('sub-badge').textContent = '✓ Actif';
     document.getElementById('sub-badge').className = 'status-badge s-won';
-  }
-  if (!userData.free_analysis_used) {
-    document.getElementById('free-badge-container').innerHTML = '<div class="free-badge">🎁 Analyse gratuite disponible cette semaine</div>';
   }
   loadBankrollChart();
 }
@@ -462,7 +455,7 @@ async function loadAnalysesHistory() {
   const el = document.getElementById('analyses-history');
   const simple = (analyses || []).filter(a => a.sport !== 'combiné');
   if (!simple.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div><p>Aucune analyse encore</p></div>'; return; }
-  el.innerHTML = simple.slice(0,5).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Analyse'}</div><div class="bet-sport">${SPORTS[a.sport]||'⚽'} ${a.sport||''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge ${a.was_free?'s-pending':'s-won'}">${a.was_free?'🎁':'1 crédit'}</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p></div>`).join('');
+  el.innerHTML = simple.slice(0,5).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Analyse'}</div><div class="bet-sport">${SPORTS[a.sport]||'⚽'} ${a.sport||''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge s-won">1 crédit</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p></div>`).join('');
 }
 
 function renderComboMatches() {
