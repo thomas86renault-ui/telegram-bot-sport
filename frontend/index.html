@@ -22,7 +22,7 @@
     .credits-pill { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--gold); }
     .nav { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
     .nav::-webkit-scrollbar { display: none; }
-    .nav-tab { flex: 1; min-width: 60px; padding: 10px 6px; text-align: center; font-size: 10px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; white-space: nowrap; }
+    .nav-tab { flex: 1; min-width: 55px; padding: 10px 4px; text-align: center; font-size: 9px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; white-space: nowrap; }
     .nav-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
     .nav-tab .tab-icon { font-size: 15px; display: block; margin-bottom: 2px; }
     .page { display: none; padding: 16px; }
@@ -39,7 +39,6 @@
     .analyse-launch h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
     .analyse-launch p { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
     .info-banner { background: rgba(108,99,255,.08); border: 1px solid rgba(108,99,255,.2); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 12px; color: var(--accent2); line-height: 1.5; }
-    .free-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,214,143,.1); border: 1px solid rgba(0,214,143,.2); border-radius: 20px; padding: 3px 10px; font-size: 11px; color: var(--green); margin-bottom: 12px; }
     .input-group { margin-bottom: 12px; }
     .input-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block; }
     .input-field { width: 100%; padding: 11px 14px; background: var(--surface3); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif; }
@@ -49,6 +48,7 @@
     .btn-primary { background: linear-gradient(135deg, var(--accent), #9d50ff); color: #fff; }
     .btn-secondary { background: var(--surface3); color: var(--text); border: 1px solid var(--border2); }
     .btn-gold { background: linear-gradient(135deg, #ffb020, #ff8c00); color: #000; }
+    .btn-green { background: linear-gradient(135deg, #00d68f, #00a86b); color: #000; }
     .bet-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
     .bet-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
     .bet-match { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; }
@@ -85,6 +85,35 @@
     .plan-features li { list-style: none; }
     .plan-features li::before { content: '✓ '; color: var(--green); font-weight: 700; }
     .plan-per-credit { font-size: 10px; color: var(--muted); margin-top: 4px; opacity: .7; }
+    /* Parrainage */
+    .referral-hero { background: linear-gradient(135deg, #1a1535, #0d1a2e); border: 1px solid rgba(108,99,255,.35); border-radius: 18px; padding: 20px; margin-bottom: 14px; }
+    .referral-hero h2 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+    .referral-hero p { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .code-box { background: rgba(108,99,255,.12); border: 1.5px dashed rgba(108,99,255,.4); border-radius: 12px; padding: 14px 16px; text-align: center; margin-bottom: 14px; }
+    .code-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .code-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--accent2); letter-spacing: 2px; }
+    .code-copy-btn { margin-top: 8px; display: inline-block; background: rgba(108,99,255,.2); color: var(--accent2); border: 1px solid rgba(108,99,255,.3); border-radius: 8px; padding: 6px 14px; font-size: 12px; cursor: pointer; }
+    .rewards-table { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 14px; }
+    .rewards-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .rewards-row:last-child { border-bottom: none; }
+    .rewards-pack { color: var(--text); font-weight: 500; }
+    .rewards-pack small { display: block; font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .rewards-credits { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--green); font-size: 14px; }
+    .referral-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .ref-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+    .ref-stat-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--accent2); }
+    .ref-stat-lbl { font-size: 10px; color: var(--muted); margin-top: 3px; }
+    /* Champ code parrainage dans boutique */
+    .referral-input-zone { background: rgba(0,214,143,.05); border: 1px solid rgba(0,214,143,.2); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+    .referral-input-zone .ri-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+    .referral-input-zone .ri-sub { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+    .referral-input-row { display: flex; gap: 8px; }
+    .referral-input-row .input-field { flex: 1; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-apply-code { background: rgba(0,214,143,.15); color: var(--green); border: 1px solid rgba(0,214,143,.3); border-radius: 10px; padding: 11px 16px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .code-status { font-size: 12px; margin-top: 8px; }
+    .code-status.ok { color: var(--green); }
+    .code-status.err { color: var(--red); }
+    /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(8px); z-index: 200; display: flex; align-items: flex-end; }
     .modal-sheet { background: var(--surface); border-radius: 24px 24px 0 0; padding: 24px 20px 32px; width: 100%; border-top: 1px solid var(--border2); }
     .modal-title { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
@@ -121,6 +150,7 @@
   <div class="nav-tab" onclick="goTo('combine')"><span class="tab-icon">🎯</span>Combiné</div>
   <div class="nav-tab" onclick="goTo('paris')"><span class="tab-icon">📋</span>Paris</div>
   <div class="nav-tab" onclick="goTo('boutique')"><span class="tab-icon">💳</span>Boutique</div>
+  <div class="nav-tab" onclick="goTo('parrainage')"><span class="tab-icon">🤝</span>Parrain</div>
 </div>
 
 <!-- DASHBOARD -->
@@ -204,6 +234,18 @@
 
 <!-- BOUTIQUE -->
 <div id="page-boutique" class="page">
+
+  <!-- Champ code parrainage -->
+  <div class="referral-input-zone">
+    <div class="ri-title">🤝 Code parrainage</div>
+    <div class="ri-sub">Un ami t'a recommandé ? Entre son code pour qu'il reçoive des crédits bonus !</div>
+    <div class="referral-input-row">
+      <input class="input-field" id="referral-code-input" placeholder="PRENOM123" maxlength="15">
+      <button class="btn-apply-code" onclick="applyReferralCode()">Valider</button>
+    </div>
+    <div class="code-status" id="referral-code-status"></div>
+  </div>
+
   <div class="section-title" style="margin-top:0">Crédits à la carte</div>
 
   <!-- Pack S -->
@@ -277,6 +319,67 @@
   </div>
 </div>
 
+<!-- PARRAINAGE -->
+<div id="page-parrainage" class="page">
+  <div class="referral-hero">
+    <h2>🤝 Programme Parrainage</h2>
+    <p>Partage ton code, reçois des crédits gratuits à chaque achat de tes filleuls. Les crédits ne te coûtent que ~0,10€/unité en coût IA — tu gardes toujours ta marge.</p>
+  </div>
+
+  <!-- Code perso -->
+  <div class="code-box" id="referral-code-box">
+    <div class="code-label">Ton code personnel</div>
+    <div class="code-value" id="my-referral-code">—</div>
+    <button class="code-copy-btn" onclick="copyMyCode()">📋 Copier</button>
+  </div>
+
+  <!-- Bouton partager -->
+  <button class="btn btn-primary mb-14" onclick="shareCode()">📤 Partager mon code sur Telegram</button>
+
+  <!-- Stats -->
+  <div class="referral-stat-grid">
+    <div class="ref-stat">
+      <div class="ref-stat-val" id="ref-count">0</div>
+      <div class="ref-stat-lbl">Filleuls actifs</div>
+    </div>
+    <div class="ref-stat">
+      <div class="ref-stat-val c-green" id="ref-credits">0</div>
+      <div class="ref-stat-lbl">Crédits gagnés</div>
+    </div>
+  </div>
+
+  <!-- Tableau des récompenses -->
+  <div class="section-title">Récompenses par achat</div>
+  <div class="rewards-table">
+    <div class="rewards-row">
+      <div class="rewards-pack">🟢 Pack S <small>4,99€ — 5 crédits</small></div>
+      <div class="rewards-credits">+2 crédits</div>
+    </div>
+    <div class="rewards-row">
+      <div class="rewards-pack">🔵 Pack M <small>9,99€ — 15 crédits</small></div>
+      <div class="rewards-credits">+4 crédits</div>
+    </div>
+    <div class="rewards-row">
+      <div class="rewards-pack">📅 Mensuel <small>24,99€/mois</small></div>
+      <div class="rewards-credits">+8 crédits</div>
+    </div>
+    <div class="rewards-row">
+      <div class="rewards-pack">🔥 Annuel <small>149€/an</small></div>
+      <div class="rewards-credits">+20 crédits</div>
+    </div>
+  </div>
+
+  <div class="info-banner" style="background:rgba(0,214,143,.05);border-color:rgba(0,214,143,.2);color:#00d68f">
+    ✅ Pas de limite — accumule des crédits indéfiniment !<br>
+    ✅ Récompense automatique dès l'achat confirmé.<br>
+    ✅ Ton filleul entre ton code avant son achat.
+  </div>
+
+  <!-- Historique filleuls -->
+  <div class="section-title">Historique filleuls</div>
+  <div id="referrals-history"></div>
+</div>
+
 <!-- MODAL PAIEMENT -->
 <div class="modal-overlay hidden" id="payment-modal">
   <div class="modal-sheet">
@@ -339,38 +442,20 @@ tg.expand(); tg.ready();
 const API_BASE = 'https://api.parissportif-ia.org';
 let userData = null, betsData = [], chartInstance = null, currentPaymentType = null;
 let comboMatches = [{ match: '', sport: 'football', odds: '' }, { match: '', sport: 'football', odds: '' }];
+let pendingReferralCode = null; // code validé avant achat
 
-// ─── Nouveaux liens Stripe (price_id → checkout) ───────────────────────────────
-// Les liens /payment_link/ sont des Payment Links Stripe statiques.
-// Remplacez par vos vrais payment links ou utilisez l'API via le backend.
 const PAYMENT_LINKS = {
-  pack_s:  {
-    stripe: 'https://buy.stripe.com/aFa8wHao0gJDbmhamUgw00b',
-    paypal: 'https://www.paypal.me/stckb2/4.99',
-    crypto: 'https://nowpayments.io/payment/?iid=6103966652'
-  },
-  pack_m:  {
-    stripe: 'https://buy.stripe.com/8x228j3ZCbpjaidcv2gw00d',
-    paypal: 'https://www.paypal.me/stckb2/9.99',
-    crypto: 'https://nowpayments.io/payment/?iid=6103966652'
-  },
-  monthly: {
-    stripe: 'https://buy.stripe.com/5kQ6ozao0ctn9e92Usgw00c',
-    paypal: 'https://www.paypal.me/stckb2/24.99',
-    crypto: 'https://nowpayments.io/payment/?iid=6410825735'
-  },
-  yearly:  {
-    stripe: 'https://buy.stripe.com/eVq5kv8fSbpj9e9eDagw008',
-    paypal: 'https://www.paypal.me/stckb2/149',
-    crypto: 'https://nowpayments.io/payment/?iid=4511571204'
-  },
+  pack_s:  { stripe: 'https://buy.stripe.com/aFa8wHao0gJDbmhamUgw00b', paypal: 'https://www.paypal.me/stckb2/4.99', crypto: 'https://nowpayments.io/payment/?iid=6103966652' },
+  pack_m:  { stripe: 'https://buy.stripe.com/8x228j3ZCbpjaidcv2gw00d', paypal: 'https://www.paypal.me/stckb2/9.99', crypto: 'https://nowpayments.io/payment/?iid=6103966652' },
+  monthly: { stripe: 'https://buy.stripe.com/5kQ6ozao0ctn9e92Usgw00c', paypal: 'https://www.paypal.me/stckb2/24.99', crypto: 'https://nowpayments.io/payment/?iid=6410825735' },
+  yearly:  { stripe: 'https://buy.stripe.com/eVq5kv8fSbpj9e9eDagw008', paypal: 'https://www.paypal.me/stckb2/149', crypto: 'https://nowpayments.io/payment/?iid=4511571204' },
 };
 
 const PAYMENT_LABELS = {
-  pack_s:  { title: '🟢 Pack S — 5 crédits',         sub: '4,99€ — paiement unique' },
-  pack_m:  { title: '🔵 Pack M — 15 crédits',        sub: '9,99€ — paiement unique' },
-  monthly: { title: '📅 Abonnement mensuel',          sub: '24,99€/mois — 60 crédits' },
-  yearly:  { title: '🔥 Abonnement annuel',           sub: '149€/an — 60 crédits/mois' },
+  pack_s:  { title: '🟢 Pack S — 5 crédits', sub: '4,99€ — paiement unique' },
+  pack_m:  { title: '🔵 Pack M — 15 crédits', sub: '9,99€ — paiement unique' },
+  monthly: { title: '📅 Abonnement mensuel', sub: '24,99€/mois — 60 crédits' },
+  yearly:  { title: '🔥 Abonnement annuel', sub: '149€/an — 60 crédits/mois' },
 };
 
 const SPORTS = { football: '⚽', tennis: '🎾', basketball: '🏀', rugby: '🏉', american_football: '🏈', baseball: '⚾', hockey: '🏒' };
@@ -387,7 +472,12 @@ async function init() {
   try {
     userData = await api.get('/api/me');
     updateHeader(); renderDashboard(); loadBets(); loadAnalysesHistory(); loadComboHistory();
-    renderComboMatches();
+    renderComboMatches(); loadReferralData();
+    // Pré-remplir le code parrainage si déjà enregistré
+    if (userData.referred_by_user_id) {
+      const statusEl = document.getElementById('referral-code-status');
+      if (statusEl) { statusEl.textContent = '✅ Code parrainage déjà enregistré.'; statusEl.className = 'code-status ok'; }
+    }
   } catch(e) { console.error(e); }
 }
 
@@ -399,9 +489,84 @@ function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-tab')[['dashboard','analyse','combine','paris','boutique'].indexOf(page)].classList.add('active');
+  const pages = ['dashboard','analyse','combine','paris','boutique','parrainage'];
+  const idx = pages.indexOf(page);
+  if (idx !== -1) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
 }
 
+// ══════════════════════════════════════════════════════════════
+// PARRAINAGE
+// ══════════════════════════════════════════════════════════════
+async function loadReferralData() {
+  try {
+    const data = await api.get('/api/referral');
+    if (data.code) {
+      document.getElementById('my-referral-code').textContent = data.code;
+    }
+    document.getElementById('ref-count').textContent = data.count || 0;
+    document.getElementById('ref-credits').textContent = data.totalCredits || 0;
+
+    const el = document.getElementById('referrals-history');
+    if (!data.referrals || !data.referrals.length) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">🤝</div><p>Pas encore de filleuls.<br>Partage ton code pour commencer !</p></div>';
+      return;
+    }
+    el.innerHTML = data.referrals.map(r =>
+      `<div class="bet-card">
+        <div class="bet-header">
+          <div>
+            <div class="bet-match">${r.first_name || r.username || 'Filleul'}</div>
+            <div class="bet-sport">${r.pack_type || '—'} · ${new Date(r.created_at).toLocaleDateString('fr-FR')}</div>
+          </div>
+          <span class="status-badge s-won">+${r.credits_awarded} crédits</span>
+        </div>
+      </div>`
+    ).join('');
+  } catch(e) { console.error('Referral load error:', e); }
+}
+
+function copyMyCode() {
+  const code = document.getElementById('my-referral-code').textContent;
+  if (code === '—') return;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(() => tg.showAlert(`Code ${code} copié !`));
+  } else {
+    tg.showAlert(`Ton code : ${code}`);
+  }
+}
+
+function shareCode() {
+  const code = document.getElementById('my-referral-code').textContent;
+  if (code === '—') return;
+  const text = encodeURIComponent(`🎯 Paris sportifs IA — rejoins-moi !\nUtilise mon code parrainage : ${code}\nhttps://t.me/ParisIA_bot`);
+  tg.openLink(`https://t.me/share/url?url=https://t.me/ParisIA_bot&text=${text}`);
+}
+
+async function applyReferralCode() {
+  const code = (document.getElementById('referral-code-input').value || '').trim().toUpperCase();
+  const statusEl = document.getElementById('referral-code-status');
+  if (!code || code.length < 4) { statusEl.textContent = '❌ Entre un code valide.'; statusEl.className = 'code-status err'; return; }
+
+  statusEl.textContent = '⏳ Vérification...'; statusEl.className = 'code-status';
+  try {
+    const res = await api.post('/api/referral/apply', { code });
+    if (res.ok) {
+      statusEl.textContent = `✅ Code validé ! ${res.referrerName} recevra des crédits lors de ton achat.`;
+      statusEl.className = 'code-status ok';
+      pendingReferralCode = code;
+    } else {
+      statusEl.textContent = `❌ ${res.error || 'Code invalide.'}`;
+      statusEl.className = 'code-status err';
+    }
+  } catch(e) {
+    statusEl.textContent = '❌ Erreur réseau, réessaie.';
+    statusEl.className = 'code-status err';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════════
 async function renderDashboard() {
   if (!userData?.stats) return;
   const s = userData.stats;
@@ -435,6 +600,9 @@ async function loadBankrollChart() {
   });
 }
 
+// ══════════════════════════════════════════════════════════════
+// ANALYSE
+// ══════════════════════════════════════════════════════════════
 async function launchAnalysis() {
   const match = document.getElementById('a-match').value.trim();
   if (!match) { tg.showAlert('Entre le nom du match'); return; }
@@ -458,6 +626,9 @@ async function loadAnalysesHistory() {
   el.innerHTML = simple.slice(0,5).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Analyse'}</div><div class="bet-sport">${SPORTS[a.sport]||'⚽'} ${a.sport||''} · ${new Date(a.created_at).toLocaleDateString('fr-FR')}</div></div><span class="status-badge s-won">1 crédit</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,180)}${a.result?.length>180?'...':''}</p></div>`).join('');
 }
 
+// ══════════════════════════════════════════════════════════════
+// COMBINÉ
+// ══════════════════════════════════════════════════════════════
 function renderComboMatches() {
   const el = document.getElementById('combo-matches-list');
   el.innerHTML = comboMatches.map((m, i) => `
@@ -526,6 +697,9 @@ async function loadComboHistory() {
   el.innerHTML = combos.slice(0,3).map(a => `<div class="bet-card"><div class="bet-header"><div><div class="bet-match">${a.match_name||'Combiné'}</div><div class="bet-sport">${new Date(a.created_at).toLocaleDateString('fr-FR')} · ${a.credits_used} crédits</div></div><span class="status-badge s-won">${a.credits_used} crédits</span></div><p style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">${(a.result||'').substring(0,200)}${a.result?.length>200?'...':''}</p></div>`).join('');
 }
 
+// ══════════════════════════════════════════════════════════════
+// PARIS
+// ══════════════════════════════════════════════════════════════
 async function loadBets() { betsData = await api.get('/api/bets') || []; renderBets(); }
 
 function renderBets() {
@@ -564,6 +738,9 @@ async function submitBet() {
   loadBets();
 }
 
+// ══════════════════════════════════════════════════════════════
+// BOUTIQUE / PAIEMENT
+// ══════════════════════════════════════════════════════════════
 function openPayment(type) {
   currentPaymentType = type;
   document.getElementById('modal-title').textContent = PAYMENT_LABELS[type].title;
