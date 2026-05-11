@@ -499,13 +499,23 @@ function goTo(page) {
 // ══════════════════════════════════════════════════════════════
 async function loadReferralData() {
   try {
-    const data = await api.get('/api/referral');
-    if (data.code) {
-      document.getElementById('my-referral-code').textContent = data.code;
+    // Code depuis userData déjà chargé (pas d'appel API supplémentaire)
+    const code = userData?.referral_code || null;
+    if (code) {
+      document.getElementById('my-referral-code').textContent = code;
     }
+ 
+    // Stats et historique depuis /api/referral
+    const data = await api.get('/api/referral');
+ 
     document.getElementById('ref-count').textContent = data.count || 0;
     document.getElementById('ref-credits').textContent = data.totalCredits || 0;
-
+ 
+    // Fallback si le code vient de l'API
+    if (!code && data.code) {
+      document.getElementById('my-referral-code').textContent = data.code;
+    }
+ 
     const el = document.getElementById('referrals-history');
     if (!data.referrals || !data.referrals.length) {
       el.innerHTML = '<div class="empty"><div class="empty-icon">🤝</div><p>Pas encore de filleuls.<br>Partage ton code pour commencer !</p></div>';
@@ -537,9 +547,15 @@ function copyMyCode() {
 
 function shareCode() {
   const code = document.getElementById('my-referral-code').textContent;
-  if (code === '—') return;
-  const text = encodeURIComponent(`🎯 Paris sportifs IA — rejoins-moi !\nUtilise mon code parrainage : ${code}\nhttps://t.me/ParisIA_bot`);
-  tg.openLink(`https://t.me/share/url?url=https://t.me/ParisIA_bot&text=${text}`);
+  if (!code || code === '—') {
+    tg.showAlert('Ton code n\'est pas encore disponible. Effectue un achat pour l\'obtenir !');
+    return;
+  }
+  const msg = `🎯 Paris sportifs IA — L'IA qui analyse tes paris !\n\n` +
+    `👉 Entre mon code parrainage ${code} avant ton premier achat.\n\n` +
+    `Le bot : https://t.me/parissportifIA_bot`;
+  const url = `https://t.me/share/url?url=https%3A%2F%2Ft.me%2FparissportifIA_bot&text=${encodeURIComponent(msg)}`;
+  try { tg.openLink(url); } catch(e) { window.open(url, '_blank'); }
 }
 
 async function applyReferralCode() {
