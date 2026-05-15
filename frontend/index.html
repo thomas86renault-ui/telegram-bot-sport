@@ -430,6 +430,7 @@
       <div class="input-group"><label class="input-label">Mise (€) *</label><input class="input-field" id="b-stake" type="number" step="0.01" placeholder="10"></div>
       <div class="input-group"><label class="input-label">Cote *</label><input class="input-field" id="b-odds" type="number" step="0.01" placeholder="1.85"></div>
     </div>
+    <div class="input-group"><label class="input-label">🕐 Heure du match (optionnel)</label><input class="input-field" id="b-match-time" type="datetime-local"></div>
     <button class="btn btn-primary mt-10" onclick="submitBet()">Enregistrer</button>
     <button class="btn btn-secondary mt-10" onclick="closeAddBet()">Annuler</button>
   </div>
@@ -748,9 +749,11 @@ async function submitBet() {
   const stake = parseFloat(document.getElementById('b-stake').value);
   const odds = parseFloat(document.getElementById('b-odds').value);
   if (!match || !stake || !odds || odds <= 1) { tg.showAlert('Remplis tous les champs (cote > 1)'); return; }
-  await api.post('/api/bets', { match_name: match, sport: document.getElementById('b-sport').value, bet_type: document.getElementById('b-type').value, stake, odds });
-  closeAddBet();
-  ['b-match','b-type','b-stake','b-odds'].forEach(id => document.getElementById(id).value = '');
+  const matchTimeVal = document.getElementById('b-match-time').value;
+const matchTime = matchTimeVal ? new Date(matchTimeVal).toISOString() : null;
+await api.post('/api/bets', { match_name: match, sport: document.getElementById('b-sport').value, bet_type: document.getElementById('b-type').value, stake, odds, match_time: matchTime });
+closeAddBet();
+['b-match','b-type','b-stake','b-odds','b-match-time'].forEach(id => document.getElementById(id).value = '');
   loadBets();
 }
 
