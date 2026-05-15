@@ -394,7 +394,7 @@
 const tg = window.Telegram?.WebApp || { initData: 'dev', expand: ()=>{}, ready: ()=>{}, showAlert: alert, openLink: u => window.open(u, '_blank') };
 tg.expand(); tg.ready();
 
-const API_BASE = 'https://parissportif-api.thomas86renault.workers.dev';
+const API_BASE = 'https://api.parissportif-ia.org';
 let userData = null, betsData = [], chartInstance = null, currentPaymentType = null;
 let comboMatches = [{ match: '', sport: 'football', odds: '' }, { match: '', sport: 'football', odds: '' }];
 
